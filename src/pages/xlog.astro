@@ -1,0 +1,74 @@
+---
+import { getCollection } from 'astro:content';
+import BaseHead from '../components/BaseHead.astro';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import { SITE_TITLE } from '../consts';
+import FormattedDate from '../components/FormattedDate.astro';
+import { render } from 'astro:content';
+
+const posts = (await getCollection('xlog')).sort(
+	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+);
+
+// We need to render the contents of each post
+const renderedPosts = await Promise.all(
+	posts.map(async (post) => {
+		const { Content } = await render(post);
+		return { ...post, Content };
+	})
+);
+---
+
+<!doctype html>
+<html lang="zh-CN">
+	<head>
+		<BaseHead title={`X-Log | ${SITE_TITLE}`} description="我在 X 上的原生动态流" />
+	</head>
+	<body class="bg-background text-foreground antialiased transition-colors duration-300">
+		<Header />
+		<main class="max-w-3xl mx-auto px-6 py-20 min-h-[60vh]">
+			<header class="mb-16">
+				<h1 class="text-5xl md:text-6xl font-black mb-6 tracking-tight animate-in fade-in slide-in-from-bottom-4 duration-700">
+					X-<span class="text-brand">Log</span>
+				</h1>
+				<p class="text-xl text-muted-foreground opacity-80 max-w-2xl leading-relaxed">
+					零散的想法、灵感与动态。在这里，文字比博客更轻快。
+				</p>
+			</header>
+
+			<div class="relative space-y-12 before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-brand/50 before:via-muted before:to-muted-foreground/10 animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-200">
+				{renderedPosts.map((post) => (
+					<div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group">
+						{/* Dot */}
+						<div class="flex items-center justify-center w-10 h-10 rounded-full border border-brand bg-background text-brand shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10">
+							<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"/></svg>
+						</div>
+						{/* Card */}
+						<div class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] glass p-6 rounded-2xl border border-muted/50 hover:border-brand/40 transition-all hover:shadow-xl hover:shadow-brand/5">
+							<div class="flex items-center justify-between mb-3 text-xs font-mono text-muted-foreground">
+								<FormattedDate date={post.data.pubDate} />
+							</div>
+							<div class="prose prose-sm dark:prose-invert max-w-none text-lg leading-relaxed">
+								<post.Content />
+							</div>
+							{post.data.link && (
+								<div class="mt-4 pt-4 border-t border-muted/30">
+									<a href={post.data.link} target="_blank" class="text-xs text-brand hover:underline flex items-center gap-1">
+										<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y1="3"></line></svg>
+										View on X
+									</a>
+								</div>
+							)}
+						</div>
+					</div>
+				))}
+			</div>
+
+			<footer class="mt-20 text-center">
+				<p class="text-muted-foreground italic">就是这些了。更多即时动态，欢迎关注我的 <a href="https://x.com/geniux" target="_blank" class="text-brand hover:underline">X 账号</a>。</p>
+			</footer>
+		</main>
+		<Footer />
+	</body>
+</html>

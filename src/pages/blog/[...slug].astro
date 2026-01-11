@@ -1,0 +1,28 @@
+---
+import { type CollectionEntry, getCollection, render } from 'astro:content';
+import BlogPost from '../../layouts/BlogPost.astro';
+
+export async function getStaticPaths() {
+	const posts = await getCollection('blog');
+	return posts.map((post) => ({
+		params: { slug: post.id },
+		props: post,
+	}));
+}
+type Props = CollectionEntry<'blog'>;
+
+const post = Astro.props;
+const { Content, headings } = await render(post);
+
+// Find other posts in the same series
+const allPosts = await getCollection('blog');
+const seriesPosts = post.data.series 
+	? allPosts
+		.filter(p => p.data.series === post.data.series)
+		.sort((a, b) => a.data.pubDate.valueOf() - b.data.pubDate.valueOf())
+	: [];
+---
+
+<BlogPost {...post.data} headings={headings} seriesPosts={seriesPosts}>
+	<Content />
+</BlogPost>

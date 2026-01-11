@@ -1,0 +1,87 @@
+---
+import { getCollection } from 'astro:content';
+import BaseHead from '../../components/BaseHead.astro';
+import Footer from '../../components/Footer.astro';
+import FormattedDate from '../../components/FormattedDate.astro';
+import Header from '../../components/Header.astro';
+import Pagination from '../../components/Pagination.astro';
+import { SITE_DESCRIPTION, SITE_TITLE } from '../../consts';
+
+export async function getStaticPaths({ paginate }) {
+	const posts = (await getCollection('blog')).sort(
+		(a, b) => {
+			const dateDiff = b.data.pubDate.valueOf() - a.data.pubDate.valueOf();
+			if (dateDiff !== 0) return dateDiff;
+			return b.id.localeCompare(a.id);
+		}
+	);
+	return paginate(posts, { pageSize: 5 });
+}
+
+const { page } = Astro.props;
+const posts = page.data;
+
+// Extract top tags for the header
+const allPosts = await getCollection('blog');
+const tags = [...new Set(allPosts.flatMap(post => post.data.tags))].slice(0, 10);
+---
+
+<!doctype html>
+<html lang="zh-CN">
+	<head>
+		<BaseHead title={`所有记录 | ${SITE_TITLE}`} description={SITE_DESCRIPTION} />
+	</head>
+	<body class="bg-background text-foreground antialiased transition-colors duration-300">
+		<Header />
+		<main class="max-w-4xl mx-auto px-6 py-20">
+			<header class="mb-16">
+				<h1 class="text-5xl font-black mb-6 tracking-tight">Archives</h1>
+				<div class="flex flex-wrap gap-2">
+					{tags.map(tag => (
+						<a href={`/tags/${tag.toLowerCase()}`} class="text-[10px] font-black uppercase tracking-widest px-3 py-1.5 rounded-full border border-muted hover:border-brand hover:text-brand transition-all">
+							#{tag}
+						</a>
+					))}
+					<a href="/tags" class="text-[10px] font-black uppercase tracking-widest px-3 py-1.5 rounded-full bg-muted text-muted-foreground hover:bg-brand hover:text-white hover:opacity-100 transition-all">
+						View All
+					</a>
+				</div>
+			</header>
+			
+			<div class="space-y-16">
+				{
+					posts.map((post) => (
+						<article class="group relative flex flex-col items-start">
+							<h4 class="text-3xl font-bold mb-2 group-hover:text-brand transition-colors">
+								<a href={`/blog/${post.id}/`}>
+									<span class="absolute -inset-y-2.5 -inset-x-4 md:-inset-y-4 md:-inset-x-6 sm:rounded-2xl"></span>
+									{post.data.title}
+								</a>
+							</h4>
+							<time datetime={post.data.pubDate.toISOString()} class="order-first mb-3 flex items-center text-sm font-mono text-muted-foreground">
+								<span class="h-4 w-0.5 rounded-full bg-brand/30 mr-3"></span>
+								<FormattedDate date={post.data.pubDate} />
+							</time>
+							<p class="text-lg text-muted-foreground leading-relaxed line-clamp-2 max-w-2xl">
+								{post.data.description}
+							</p>
+							<div class="flex flex-wrap gap-2 mt-4">
+								{post.data.tags.map((tag) => (
+									<span class="text-[10px] font-bold uppercase tracking-widest px-2 py-0.5 rounded bg-muted/50 text-muted-foreground">
+										{tag}
+									</span>
+								))}
+							</div>
+							<div class="mt-4 flex items-center text-sm font-bold text-brand group-hover:underline">
+								Read More →
+							</div>
+						</article>
+					))
+				}
+			</div>
+
+			<Pagination page={page} />
+		</main>
+		<Footer />
+	</body>
+</html>

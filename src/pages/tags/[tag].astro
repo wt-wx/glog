@@ -1,0 +1,84 @@
+---
+import { getCollection } from 'astro:content';
+import BaseHead from '../../components/BaseHead.astro';
+import Footer from '../../components/Footer.astro';
+import Header from '../../components/Header.astro';
+import { SITE_TITLE, SITE_DESCRIPTION } from '../../consts';
+import FormattedDate from '../../components/FormattedDate.astro';
+
+export async function getStaticPaths() {
+	const allPosts = await getCollection('blog');
+	const uniqueTags = [...new Set(allPosts.map((post) => post.data.tags).flat())];
+
+	return uniqueTags.map((tag) => {
+		const filteredPosts = allPosts.filter((post) =>
+			post.data.tags.includes(tag)
+		).sort((a, b) => {
+			const dateDiff = b.data.pubDate.valueOf() - a.data.pubDate.valueOf();
+			if (dateDiff !== 0) return dateDiff;
+			return b.id.localeCompare(a.id);
+		});
+		return {
+			params: { tag },
+			props: { posts: filteredPosts },
+		};
+	});
+}
+
+const { tag } = Astro.params;
+const { posts } = Astro.props;
+---
+
+<!doctype html>
+<html lang="zh-CN">
+	<head>
+		<BaseHead title={`${tag} | ${SITE_TITLE}`} description={SITE_DESCRIPTION} />
+	</head>
+	<body class="bg-background text-foreground antialiased transition-colors duration-300">
+		<Header />
+		<main class="max-w-4xl mx-auto px-6 py-20 min-h-[60vh]">
+			<header class="mb-16">
+				<div class="flex items-center gap-4 mb-4">
+					<a href="/tags" class="text-sm font-bold uppercase tracking-widest text-brand hover:underline decoration-2 underline-offset-4 transition-all">Tags</a>
+					<span class="text-muted-foreground">/</span>
+					<span class="text-sm font-bold uppercase tracking-widest text-muted-foreground/30">{tag}</span>
+				</div>
+				<h1 class="text-5xl md:text-6xl font-black mb-6 tracking-tight animate-in fade-in slide-in-from-bottom-4 duration-700">
+					Posts tagged with <span class="text-brand">#{tag}</span>
+				</h1>
+				<p class="text-xl text-muted-foreground opacity-80 max-w-2xl leading-relaxed">
+					共找到 {posts.length} 篇相关文章。
+				</p>
+			</header>
+
+			<div class="space-y-12 animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-200">
+				{posts.map((post) => (
+					<article class="group relative">
+						<a href={`/blog/${post.id}/`} class="block space-y-4">
+							<div class="flex flex-col md:flex-row md:items-baseline justify-between gap-4">
+								<h2 class="text-2xl md:text-4xl font-black group-hover:text-brand transition-all leading-tight">
+									{post.data.title}
+								</h2>
+								<div class="text-sm font-mono text-muted-foreground whitespace-nowrap bg-muted/30 px-3 py-1 rounded-full">
+									<FormattedDate date={post.data.pubDate} />
+								</div>
+							</div>
+							<p class="text-lg text-muted-foreground line-clamp-2 max-w-3xl leading-relaxed">
+								{post.data.description}
+							</p>
+							<div class="flex flex-wrap gap-2 pt-2">
+								{post.data.tags.map((t) => (
+									<span class={`text-[10px] font-black uppercase tracking-widest px-2 py-0.5 rounded-md ${t === tag ? 'bg-brand text-white' : 'bg-muted text-muted-foreground'}`}>
+										{t}
+									</span>
+								))}
+							</div>
+						</a>
+						<div class="absolute -inset-x-6 -inset-y-4 z-[-1] rounded-3xl bg-brand/0 group-hover:bg-brand/[0.02] transition-colors"></div>
+					</article>
+				))}
+			</div>
+		</main>
+		<Footer />
+	</body>
+</html>

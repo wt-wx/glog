@@ -1,0 +1,59 @@
+---
+import { getCollection } from 'astro:content';
+import BaseHead from '../components/BaseHead.astro';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+
+const allPosts = await getCollection('blog');
+const tags = [...new Set(allPosts.map((post) => post.data.tags).flat())].sort();
+
+// Calculate post count per tag
+const tagCounts = tags.reduce((acc, tag) => {
+	const count = allPosts.filter((post) => post.data.tags.includes(tag)).length;
+	acc[tag] = count;
+	return acc;
+}, {} as Record<string, number>);
+---
+
+<!doctype html>
+<html lang="zh-CN">
+	<head>
+		<BaseHead title={`标签 | ${SITE_TITLE}`} description={SITE_DESCRIPTION} />
+	</head>
+	<body class="bg-background text-foreground antialiased transition-colors duration-300">
+		<Header />
+		<main class="max-w-4xl mx-auto px-6 py-20 min-h-[60vh]">
+			<header class="mb-16">
+				<h1 class="text-5xl md:text-6xl font-black mb-6 tracking-tight animate-in fade-in slide-in-from-bottom-4 duration-700">
+					Explore <span class="text-brand">Tags</span>
+				</h1>
+				<p class="text-xl text-muted-foreground opacity-80 max-w-2xl leading-relaxed">
+					发现感兴趣的主题。目前共有 {tags.length} 个标签，覆盖了 {allPosts.length} 篇文章。
+				</p>
+			</header>
+
+			{tags.length > 0 ? (
+				<div class="flex flex-wrap gap-4 animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-200">
+					{tags.map((tag) => (
+						<a 
+							href={`/tags/${tag}`}
+							class="group flex items-center gap-3 px-6 py-3 bg-muted/20 hover:bg-brand/10 border border-muted hover:border-brand/30 rounded-2xl transition-all hover:shadow-lg hover:shadow-brand/5 hover:-translate-y-1"
+						>
+							<span class="font-bold text-lg group-hover:text-brand transition-colors">{tag}</span>
+							<span class="flex items-center justify-center w-6 h-6 rounded-full bg-muted-foreground/10 text-[10px] font-black text-muted-foreground group-hover:bg-brand group-hover:text-white transition-all">
+								{tagCounts[tag]}
+							</span>
+						</a>
+					))}
+				</div>
+			) : (
+				<div class="p-12 text-center rounded-3xl bg-muted/10 border border-dashed border-muted/50 transition-all">
+					<p class="text-muted-foreground mb-4 italic">暂无标签内容...</p>
+					<p class="text-sm text-brand-foreground/50">在文章 Frontmatter 中添加 tags 字段即可自动显示。</p>
+				</div>
+			)}
+		</main>
+		<Footer />
+	</body>
+</html>

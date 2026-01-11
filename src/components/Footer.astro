@@ -1,0 +1,98 @@
+---
+import CookieConsent from './CookieConsent.astro';
+const today = new Date();
+---
+
+<footer class="py-12 mt-20 border-t border-muted">
+	<div class="max-w-4xl mx-auto px-6">
+		{/* Top Row: Site Links (Left) & Social Links (Right) */}
+		<div class="flex flex-col md:flex-row items-center justify-between gap-6 mb-8">
+			<div class="flex flex-wrap gap-8 font-medium">
+				<a href="/about" class="text-foreground hover:text-brand transition-colors">About</a>
+				<a href="/projects" class="text-foreground hover:text-brand transition-colors">Projects</a>
+				<a href="/tags" class="text-foreground hover:text-brand transition-colors">Tags</a>
+				<a href="/bookmarks" class="text-foreground hover:text-brand transition-colors">Benchmarks</a>
+				<a href="https://gallery.geniux.net" target="_blank" class="text-foreground hover:text-brand transition-colors">Gallery</a>
+			</div>
+			<div class="flex flex-wrap items-center gap-x-6 gap-y-2">
+				<a href="https://x.com/geniux" target="_blank" class="text-foreground hover:text-brand transition-colors text-sm font-medium">X/Twitter</a>
+				<a href="https://facebook.com/geniux" target="_blank" class="text-foreground hover:text-brand transition-colors text-sm font-medium">Facebook</a>
+				<a href="https://instagram.com/geniux" target="_blank" class="text-foreground hover:text-brand transition-colors text-sm font-medium">Instagram</a>
+				<a href="mailto:geniux+glog@gmail.com" class="text-foreground hover:text-brand transition-colors text-sm font-medium">Email</a>
+				<a href="/rss.xml" target="_blank" class="text-foreground hover:text-brand transition-colors text-sm font-medium">RSS</a>
+			</div>
+		</div>
+
+		{/* Divider: Dashed line */}
+		<div class="border-t border-dashed border-muted mb-8"></div>
+
+		{/* Bottom Row: Copyright (Left) & Powered By (Right) */}
+		<div class="flex flex-col md:flex-row items-center justify-between gap-6">
+			<p class="text-muted-foreground text-sm">
+				&copy; {today.getFullYear()} Glog. All rights reserved.
+			</p>
+			<div class="flex flex-wrap items-center gap-x-4 gap-y-2 text-[10px] uppercase tracking-widest text-muted-foreground/30 font-bold">
+				<span>Powered by</span>
+				<a href="https://astro.build" target="_blank" class="hover:text-brand transition-colors">Astro</a>
+				<span class="opacity-30">|</span>
+				<a href="https://github.com" target="_blank" class="hover:text-brand transition-colors">GitHub</a>
+				<span class="opacity-30">|</span>
+				<a href="https://cloudflare.com" target="_blank" class="hover:text-brand transition-colors">Cloudflare</a>
+				<span class="opacity-30">|</span>
+				<a href="https://vercel.com" target="_blank" class="hover:text-brand transition-colors">Vercel</a>
+			</div>
+		</div>
+	<!-- Back to Top Button (Collision-aware) -->
+	<button 
+		id="back-to-top" 
+		class="fixed z-40 w-12 h-12 flex items-center justify-center bg-background/80 backdrop-blur-xl border border-muted/50 rounded-full shadow-lg hover:shadow-brand/20 hover:border-brand transition-all transform translate-y-20 opacity-0 pointer-events-none group"
+		style="right: max(1.5rem, calc(50vw - 450px)); bottom: 100px;"
+		title="Back to Top"
+	>
+		<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="text-muted-foreground group-hover:text-brand transition-all group-hover:-translate-y-1"><path d="m18 15-6-6-6 6"/></svg>
+	</button>
+</footer>
+
+<script>
+	const setupBackToTop = () => {
+		const topBtn = document.getElementById('back-to-top');
+		const footer = document.querySelector('footer');
+		if (!topBtn || !footer) return;
+
+		const updatePosition = () => {
+			const scrollY = window.scrollY;
+			const windowHeight = window.innerHeight;
+			const footerRect = footer.getBoundingClientRect();
+			
+			// Show/Hide logic
+			if (scrollY > 400) {
+				topBtn.classList.remove('translate-y-20', 'opacity-0', 'pointer-events-none');
+				topBtn.classList.add('translate-y-0', 'opacity-100');
+			} else {
+				topBtn.classList.add('translate-y-20', 'opacity-0', 'pointer-events-none');
+				topBtn.classList.remove('translate-y-0', 'opacity-100');
+			}
+
+			// Collision detection: lift button if footer is visible
+			const footerTop = footerRect.top;
+			if (footerTop < windowHeight) {
+				const offset = windowHeight - footerTop + 20; // 20px buffer above footer
+				topBtn.style.bottom = `${80 + offset}px`;
+			} else {
+				topBtn.style.bottom = '100px';
+			}
+		};
+
+		window.addEventListener('scroll', updatePosition);
+		window.addEventListener('resize', updatePosition);
+		topBtn.addEventListener('click', () => {
+			window.scrollTo({ top: 0, behavior: 'smooth' });
+		});
+		
+		updatePosition();
+	};
+
+	document.addEventListener('astro:page-load', setupBackToTop);
+</script>
+
+<CookieConsent />

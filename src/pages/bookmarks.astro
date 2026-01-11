@@ -1,0 +1,183 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
+import bookmarksGroups from '../data/bookmarks.json';
+
+// Total links count
+const totalLinks = bookmarksGroups.reduce((acc, g) => acc + g.links.length, 0);
+---
+
+<!doctype html>
+<html lang="zh-CN">
+	<head>
+		<BaseHead title={`Benchmarks | ${SITE_TITLE}`} description="My collection of useful links and benchmarks." />
+	</head>
+	<body class="bg-background text-foreground antialiased transition-colors duration-300">
+		<Header />
+		<main class="max-w-6xl mx-auto px-6 py-20 min-h-[60vh]">
+			<header class="mb-16">
+				<h1 class="text-5xl md:text-7xl font-black mb-6 tracking-tight animate-in fade-in slide-in-from-bottom-4 duration-700">
+					Bench<span class="text-brand">marks</span>
+				</h1>
+				<p class="text-xl text-muted-foreground opacity-80 max-w-2xl leading-relaxed">
+					My personal directory of {totalLinks} curated links, resources, and technical references.
+				</p>
+				
+				<div class="mt-10 relative max-w-xl group">
+					<div class="absolute inset-y-0 left-4 flex items-center pointer-events-none text-muted-foreground group-focus-within:text-brand transition-colors">
+						<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+					</div>
+					<input 
+						type="text" 
+						id="bookmark-search"
+						placeholder="Search benchmarks..." 
+						class="w-full bg-muted/30 border border-muted-foreground/10 rounded-2xl py-4 pl-12 pr-4 focus:outline-none focus:ring-2 focus:ring-brand/50 focus:border-brand transition-all text-lg"
+					/>
+				</div>
+			</header>
+
+			<div id="bookmarks-container" class="space-y-16">
+				{bookmarksGroups.slice(0, 30).map((group) => (
+					<section class="bookmark-group animate-in fade-in slide-in-from-bottom-8 duration-700" data-domain={group.name}>
+						<div class="flex items-center gap-3 mb-6 border-b border-muted pb-2">
+							<img src={`https://www.google.com/s2/favicons?domain=${group.name}&sz=32`} alt="" class="w-6 h-6 rounded" />
+							<h2 class="text-2xl font-bold tracking-tight">{group.name}</h2>
+							<span class="text-xs font-black bg-muted text-muted-foreground px-2 py-0.5 rounded-full uppercase tracking-widest">{group.links.length} items</span>
+						</div>
+						<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+							{group.links.map((link) => (
+								<a 
+									href={link.url} 
+									target="_blank" 
+									rel="noopener noreferrer"
+									class="bookmark-item group flex items-start gap-3 p-4 rounded-xl bg-muted/20 border border-transparent hover:border-brand/30 hover:bg-brand/[0.03] transition-all"
+									title={link.title}
+								>
+									{link.icon ? (
+										<img src={link.icon} alt="" class="w-5 h-5 mt-0.5 flex-shrink-0" />
+									) : (
+										<div class="w-5 h-5 mt-0.5 flex-shrink-0 flex items-center justify-center bg-muted rounded text-[10px] font-bold text-muted-foreground">
+											{group.name.charAt(0).toUpperCase()}
+										</div>
+									)}
+									<span class="text-sm font-medium leading-snug line-clamp-2 group-hover:text-brand transition-colors">
+										{link.title}
+									</span>
+								</a>
+							))}
+						</div>
+					</section>
+				))}
+				
+				{bookmarksGroups.length > 30 && (
+					<div id="load-more-trigger" class="py-20 text-center">
+						<p class="text-muted-foreground mb-4">Showing top 30 domains. Use search to find more or load remaining {bookmarksGroups.length - 30} domains.</p>
+						<button 
+							id="load-results-btn"
+							class="px-8 py-3 bg-brand text-white font-bold rounded-full hover:scale-105 active:scale-95 transition-all shadow-lg shadow-brand/20"
+						>
+							Load All Domains
+						</button>
+					</div>
+				)}
+			</div>
+			
+			<div id="search-results" class="hidden grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pb-20">
+				{/* Search results will be injected here */}
+			</div>
+		</main>
+
+		<Footer />
+
+		<script is:inline define:vars={{ bookmarksGroups }}>
+			const searchInput = document.getElementById('bookmark-search');
+			const container = document.getElementById('bookmarks-container');
+			const searchResults = document.getElementById('search-results');
+			const loadMoreBtn = document.getElementById('load-results-btn');
+			
+			let allLoaded = false;
+
+			function renderAll() {
+				if (allLoaded) return;
+				
+				// This is heavy, so we wrap it in a timeout to keep UI responsive
+				setTimeout(() => {
+					const fragment = document.createDocumentFragment();
+					bookmarksGroups.slice(30).forEach(group => {
+						const section = document.createElement('section');
+						section.className = 'bookmark-group mt-16';
+						section.dataset.domain = group.name;
+						
+						section.innerHTML = `
+							<div class="flex items-center gap-3 mb-6 border-b border-muted pb-2">
+								<img src="https://www.google.com/s2/favicons?domain=${group.name}&sz=32" alt="" class="w-6 h-6 rounded" />
+								<h2 class="text-2xl font-bold tracking-tight">${group.name}</h2>
+								<span class="text-xs font-black bg-muted text-muted-foreground px-2 py-0.5 rounded-full uppercase tracking-widest">${group.links.length} items</span>
+							</div>
+							<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+								${group.links.map(link => `
+									<a href="${link.url}" target="_blank" rel="noopener noreferrer" class="bookmark-item group flex items-start gap-3 p-4 rounded-xl bg-muted/20 border border-transparent hover:border-brand/30 hover:bg-brand/[0.03] transition-all" title="${link.title}">
+										${link.icon ? `<img src="${link.icon}" alt="" class="w-5 h-5 mt-0.5 flex-shrink-0" />` : `<div class="w-5 h-5 mt-0.5 flex-shrink-0 flex items-center justify-center bg-muted rounded text-[10px] font-bold text-muted-foreground">${group.name.charAt(0).toUpperCase()}</div>`}
+										<span class="text-sm font-medium leading-snug line-clamp-2 group-hover:text-brand transition-colors">${link.title}</span>
+									</a>
+								`).join('')}
+							</div>
+						`;
+						fragment.appendChild(section);
+					});
+					
+					const trigger = document.getElementById('load-more-trigger');
+					if (trigger) trigger.remove();
+					container.appendChild(fragment);
+					allLoaded = true;
+				}, 10);
+			}
+
+			if (loadMoreBtn) {
+				loadMoreBtn.addEventListener('click', renderAll);
+			}
+
+			searchInput.addEventListener('input', (e) => {
+				const query = e.target.value.toLowerCase();
+				
+				if (!query) {
+					container.classList.remove('hidden');
+					searchResults.classList.add('hidden');
+					searchResults.innerHTML = '';
+					return;
+				}
+
+				container.classList.add('hidden');
+				searchResults.classList.remove('hidden');
+				
+				// Search across all groups and links
+				const results = [];
+				for (const group of bookmarksGroups) {
+					for (const link of group.links) {
+						if (link.title.toLowerCase().includes(query) || link.url.toLowerCase().includes(query)) {
+							results.push({ ...link, domain: group.name });
+						}
+						if (results.length > 100) break; // Limit search results for performance
+					}
+					if (results.length > 100) break;
+				}
+
+				searchResults.innerHTML = results.map(link => `
+					<a href="${link.url}" target="_blank" rel="noopener noreferrer" class="bookmark-item group flex items-start gap-3 p-4 rounded-xl bg-muted/20 border border-transparent hover:border-brand/30 hover:bg-brand/[0.03] transition-all" title="${link.title}">
+						${link.icon ? `<img src="${link.icon}" alt="" class="w-5 h-5 mt-0.5 flex-shrink-0" />` : `<div class="w-5 h-5 mt-0.5 flex-shrink-0 flex items-center justify-center bg-muted rounded text-[10px] font-bold text-muted-foreground">${link.domain.charAt(0).toUpperCase()}</div>`}
+						<div>
+							<span class="text-sm font-medium leading-snug line-clamp-2 group-hover:text-brand transition-colors">${link.title}</span>
+							<span class="text-[10px] text-muted-foreground opacity-50 block mt-1">${link.domain}</span>
+						</div>
+					</a>
+				`).join('');
+				
+				if (results.length === 0) {
+					searchResults.innerHTML = '<div class="col-span-full py-20 text-center text-muted-foreground text-xl font-medium">No results found matching your search.</div>';
+				}
+			});
+		</script>
+	</body>
+</html>

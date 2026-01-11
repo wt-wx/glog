@@ -1,0 +1,46 @@
+<div id="cookie-consent" class="fixed bottom-8 left-1/2 -translate-x-1/2 z-[100] w-[calc(100%-2rem)] max-w-md hidden">
+	<div class="glass p-6 rounded-2xl shadow-2xl border border-white/20 flex flex-col gap-4">
+		<div class="flex items-start gap-4">
+			<div class="bg-brand/10 p-2 rounded-xl text-brand">
+				<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 1 0 10 10 4 4 0 0 1-5-5 4 4 0 0 1-5-5"></path><path d="M8.5 8.5v.01"></path><path d="M16 15.5v.01"></path><path d="M12 12v.01"></path><path d="M11 17v.01"></path><path d="M7 14v.01"></path></svg>
+			</div>
+			<div class="flex-1">
+				<h3 class="font-bold text-lg mb-1">Cookie Consent</h3>
+				<p class="text-sm text-muted-foreground leading-relaxed">
+					We use cookies to enhance your browsing experience and analyze site traffic. By clicking "Accept", you agree to our cookie policy.
+				</p>
+			</div>
+		</div>
+		<div class="flex gap-3 mt-2">
+			<button id="accept-cookies" class="flex-1 bg-brand text-white py-2.5 rounded-xl font-bold hover:opacity-90 transition-all cursor-pointer">
+				Accept
+			</button>
+			<button id="decline-cookies" class="flex-1 bg-muted text-foreground py-2.5 rounded-xl font-bold hover:opacity-80 transition-all cursor-pointer">
+				Decline
+			</button>
+		</div>
+	</div>
+</div>
+
+<script>
+	const consent = document.getElementById('cookie-consent');
+	const acceptBtn = document.getElementById('accept-cookies');
+	const declineBtn = document.getElementById('decline-cookies');
+
+	if (!localStorage.getItem('cookie-consent')) {
+		consent?.classList.remove('hidden');
+		consent?.classList.add('animate-in', 'fade-in', 'slide-in-from-bottom-8', 'duration-700');
+	}
+
+	acceptBtn?.addEventListener('click', () => {
+		localStorage.setItem('cookie-consent', 'accepted');
+		consent?.classList.add('animate-out', 'fade-out', 'slide-out-to-bottom-8', 'duration-500');
+		setTimeout(() => consent?.classList.add('hidden'), 500);
+	});
+
+	declineBtn?.addEventListener('click', () => {
+		localStorage.setItem('cookie-consent', 'declined');
+		consent?.classList.add('animate-out', 'fade-out', 'slide-out-to-bottom-8', 'duration-500');
+		setTimeout(() => consent?.classList.add('hidden'), 500);
+	});
+</script>

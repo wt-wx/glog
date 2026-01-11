@@ -1,0 +1,206 @@
+---
+import { Image } from 'astro:assets';
+import type { CollectionEntry } from 'astro:content';
+import BaseHead from '../components/BaseHead.astro';
+import Footer from '../components/Footer.astro';
+import FormattedDate from '../components/FormattedDate.astro';
+import Header from '../components/Header.astro';
+
+import Giscus from '../components/Giscus.astro';
+
+type Props = CollectionEntry<'blog'>['data'] & { 
+	headings?: { depth: number; slug: string; text: string }[],
+	seriesPosts?: CollectionEntry<'blog'>[] 
+};
+
+const { title, description, pubDate, updatedDate, heroImage, headings, seriesPosts } = Astro.props;
+---
+
+<html lang="en">
+	<head>
+		<BaseHead title={title} description={description} />
+	</head>
+
+	<body class="bg-background text-foreground antialiased transition-colors duration-300">
+		<div id="progress-bar" class="fixed top-0 left-0 h-1 bg-brand z-[60] transition-all duration-150 w-0 shadow-[0_0_10px_rgba(59,130,246,0.5)]"></div>
+		<Header />
+		
+		<main class="max-w-7xl mx-auto px-6 py-12 md:py-24 animate-in fade-in duration-700 relative">
+			<div class="flex flex-col items-center">
+				<article class="w-full max-w-3xl">
+					<nav class="mb-8">
+						<a href="/blog" class="group inline-flex items-center gap-2 text-muted-foreground hover:text-brand transition-all font-semibold">
+							<span class="transition-transform group-hover:-translate-x-1">←</span>
+							<span>Back</span>
+						</a>
+					</nav>
+					<header class="mb-12 text-center md:text-left relative">
+						<div class="flex items-center gap-2 text-muted-foreground font-mono text-sm mb-4 justify-center md:justify-start">
+							<FormattedDate date={pubDate} />
+							{
+								updatedDate && (
+									<span class="italic text-brand/60">
+										(Updated on <FormattedDate date={updatedDate} />)
+									</span>
+								)
+							}
+						</div>
+						<h1 class="text-4xl md:text-6xl font-black tracking-tight mb-6 leading-tight">
+							{title}
+						</h1>
+						<p class="text-xl text-muted-foreground leading-relaxed">
+							{description}
+						</p>
+					</header>
+
+					{heroImage && (
+						<div class="rounded-3xl overflow-hidden shadow-2xl mb-16 aspect-video shrink-0 bg-muted">
+							<Image width={1020} height={510} src={heroImage} alt="" class="w-full h-full object-cover" />
+						</div>
+					)}
+					
+					<div class="prose prose-lg dark:prose-invert prose-indigo max-w-none">
+						<slot />
+					</div>
+
+					{seriesPosts && seriesPosts.length > 1 && (
+						<div class="mt-16 p-8 bg-muted/20 border border-muted rounded-3xl">
+							<h3 class="text-lg font-bold mb-6 flex items-center gap-2 text-foreground">
+								<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-brand"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5z"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><path d="M6.5 18H20"/></svg>
+								Series: {seriesPosts[0].data.series}
+							</h3>
+							<div class="grid gap-3">
+								{seriesPosts.map((p, index) => (
+									<a 
+										href={`/blog/${p.id}/`} 
+										class={`flex items-center gap-4 p-4 rounded-xl transition-all ${p.data.title === title ? 'bg-brand/10 border border-brand/20 pointer-events-none' : 'hover:bg-muted border border-transparent'}`}
+									>
+										<span class={`flex shrink-0 w-8 h-8 items-center justify-center rounded-full text-xs font-bold ${p.data.title === title ? 'bg-brand text-white' : 'bg-muted-foreground/10 text-muted-foreground'}`}>
+											{index + 1}
+										</span>
+										<span class="font-medium text-foreground">{p.data.title}</span>
+										{p.data.title === title && <span class="ml-auto text-[10px] uppercase font-bold tracking-widest text-brand">Reading</span>}
+									</a>
+								))}
+							</div>
+						</div>
+					)}
+
+					<Giscus />
+				</article>
+
+				<!-- Floating ToC Menu (Desktop only, closer to content) -->
+				{headings && headings.length > 0 && (
+					<div 
+						class="hidden lg:flex fixed z-40 flex-col items-start top-52" 
+						id="toc-container"
+						style="right: max(1rem, calc(50vw - 420px));"
+					>
+						<!-- Toggle Button -->
+						<button 
+							id="toc-toggle" 
+							class="w-10 h-10 flex items-center justify-center bg-background/80 backdrop-blur-xl border border-muted/50 rounded-full shadow-lg hover:shadow-brand/20 hover:border-brand transition-all active:scale-95 group"
+						>
+							<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-muted-foreground group-hover:text-brand transition-colors"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg>
+						</button>
+
+						<!-- ToC Popover (Expands to the Right) -->
+						<div 
+							id="toc-content" 
+							class="hidden absolute left-0 top-12 w-64 lg:w-72 max-h-[70vh] p-6 bg-background/95 backdrop-blur-2xl border border-muted/50 rounded-3xl shadow-2xl overflow-y-auto animate-in zoom-in-95 slide-in-from-left-4 duration-300 origin-top-left"
+						>
+							<h2 class="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-6 italic">On this page</h2>
+							<nav>
+								<ul class="space-y-4 text-sm">
+									{headings.filter(h => h.depth <= 3).map(h => (
+										<li style={`margin-left: ${(h.depth - 2) * 1}rem`}>
+											<a 
+												href={`#${h.slug}`} 
+												class="toc-link text-muted-foreground/80 hover:text-brand transition-all block py-0.5 border-l-2 border-transparent pl-4 hover:border-brand/30 leading-relaxed"
+											>
+												{h.text}
+											</a>
+										</li>
+									))}
+								</ul>
+							</nav>
+						</div>
+					</div>
+				)}
+			</div>
+		</main>
+		<Footer />
+
+		<script>
+			// Reading Progress Bar
+			const updateProgressBar = () => {
+				const progressBar = document.getElementById('progress-bar');
+				if (progressBar) {
+					const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
+					const progress = totalHeight > 0 ? (window.scrollY / totalHeight) * 100 : 0;
+					progressBar.style.width = `${progress}%`;
+				}
+			};
+
+			// ToC Toggle Logic
+			const setupToc = () => {
+				const toggle = document.getElementById('toc-toggle');
+				const content = document.getElementById('toc-content');
+				
+				if (toggle && content) {
+					toggle.addEventListener('click', (e) => {
+						e.stopPropagation();
+						content.classList.toggle('hidden');
+						toggle.classList.toggle('border-brand');
+						toggle.classList.toggle('text-brand');
+					});
+
+					document.addEventListener('click', (e) => {
+						if (!content.contains(e.target as Node) && !toggle.contains(e.target as Node)) {
+							content.classList.add('hidden');
+							toggle.classList.remove('border-brand');
+						}
+					});
+
+					document.addEventListener('keydown', (e) => {
+						if (e.key === 'Escape') {
+							content.classList.add('hidden');
+							toggle.classList.remove('border-brand');
+						}
+					});
+
+					content.querySelectorAll('a').forEach(link => {
+						link.addEventListener('click', () => {
+							content.classList.add('hidden');
+							toggle.classList.remove('border-brand');
+						});
+					});
+				}
+			};
+
+			// Active Heading Observer
+			const setupScrollObserver = () => {
+				const observer = new IntersectionObserver((entries) => {
+					entries.forEach(entry => {
+						const id = entry.target.getAttribute('id');
+						const tocLink = document.querySelector(`.toc-link[href="#${id}"]`);
+						if (entry.isIntersecting && tocLink) {
+							document.querySelectorAll('.toc-link').forEach(a => a.classList.remove('text-brand', 'font-bold', 'border-brand', 'pl-6'));
+							tocLink.classList.add('text-brand', 'font-bold', 'border-brand', 'pl-6');
+						}
+					});
+				}, { rootMargin: '-10% 0% -80% 0%' });
+
+				document.querySelectorAll('h1[id], h2[id], h3[id]').forEach(h => observer.observe(h));
+			};
+
+			// Initialize
+			document.addEventListener('astro:page-load', () => {
+				window.addEventListener('scroll', updateProgressBar);
+				updateProgressBar();
+				setupToc();
+				setupScrollObserver();
+			});
+		</script>
+	</body>
+</html>

@@ -1,0 +1,43 @@
+---
+const { page } = Astro.props;
+---
+
+<nav class="flex items-center justify-between mt-16 border-t border-muted pt-8">
+    <div class="flex-1 flex justify-start">
+        {page.url.prev ? (
+            <a 
+                href={page.url.prev} 
+                class="group flex items-center gap-2 text-sm font-bold uppercase tracking-widest hover:text-brand transition-colors"
+            >
+                <span class="group-hover:-translate-x-1 transition-transform">←</span>
+                Newer Posts
+            </a>
+        ) : (
+            <span class="text-sm font-bold uppercase tracking-widest text-muted-foreground/30 cursor-not-allowed">
+                ← Newer Posts
+            </span>
+        )}
+    </div>
+
+    <div class="hidden md:flex items-center gap-4">
+        <span class="text-xs font-mono text-muted-foreground/60 uppercase tracking-widest">
+            Page {page.currentPage} of {page.lastPage}
+        </span>
+    </div>
+
+    <div class="flex-1 flex justify-end">
+        {page.url.next ? (
+            <a 
+                href={page.url.next} 
+                class="group flex items-center gap-2 text-sm font-bold uppercase tracking-widest hover:text-brand transition-colors"
+            >
+                Older Posts
+                <span class="group-hover:translate-x-1 transition-transform">→</span>
+            </a>
+        ) : (
+            <span class="text-sm font-bold uppercase tracking-widest text-muted-foreground/30 cursor-not-allowed">
+                Older Posts →
+            </span>
+        )}
+    </div>
+</nav>

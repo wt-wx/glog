@@ -1,0 +1,31 @@
+{
+  "name": "glog",
+  "type": "module",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro",
+    "sync-x": "node scripts/sync-x.mjs",
+    "push-x": "node scripts/post-to-x.mjs"
+  },
+  "dependencies": {
+    "@astrojs/mdx": "^4.3.13",
+    "@astrojs/rss": "^4.0.14",
+    "@astrojs/sitemap": "^3.6.0",
+    "@tailwindcss/vite": "^4.1.18",
+    "astro": "^5.16.6",
+    "contentful-management": "^11.67.0",
+    "dotenv": "^17.2.3",
+    "fuse.js": "^7.1.0",
+    "gray-matter": "^4.0.3",
+    "sharp": "^0.34.3",
+    "tailwindcss": "^4.1.18",
+    "twitter-api-v2": "^1.28.0"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.6",
+    "typescript": "^5.9.3"
+  }
+}
