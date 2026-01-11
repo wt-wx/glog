@@ -1,4 +1,9 @@
-
+---
+title: 'Naming my Technology Company in English'
+description: 'Exploring various English naming options for "Shangrui Smart Technology" (尚睿智慧科技有限公司) using multiple AI models.'
+pubDate: '2026-01-08'
+tags: ['Naming', 'Business', 'Tech', 'AI']
+---
 
 以下来自gemini.google.com
 
