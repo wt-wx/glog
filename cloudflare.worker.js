@@ -165,47 +165,60 @@ export const introWorker = {
         const TARGET_DOMAIN = "glog.vercel.geniux.net";
         const TARGET_BASE = `https://${TARGET_DOMAIN}`;
 
-        // 关键点：如果访问的是根目录，尝试直接请求带斜杠的 /intro/ 避免重定向
+        // 尝试直接请求带斜杠的路径
         const targetPath = url.pathname === "/" ? "/intro/" : url.pathname;
-        let targetUrl = TARGET_BASE + targetPath + url.search;
+        const targetUrl = TARGET_BASE + targetPath + url.search;
 
-        const maxRedirects = 3;
+        const maxRedirects = 5;
         let currentRedirects = 0;
 
         async function fetchRecursively(fetchUrl) {
-            const reqHeaders = new Headers(request.headers);
+            // 创建完全纯净的请求头
+            const reqHeaders = new Headers();
             reqHeaders.set("Host", TARGET_DOMAIN);
-            // 移除可能导致后端重定向的 Referer
-            reqHeaders.delete("Referer");
+            reqHeaders.set("User-Agent", request.headers.get("User-Agent") || "Cloudflare Worker");
+            reqHeaders.set("Accept", request.headers.get("Accept") || "*/*");
+            reqHeaders.set("Accept-Language", request.headers.get("Accept-Language") || "en-US,en;q=0.9");
 
             const response = await fetch(fetchUrl, {
-                method: request.method,
+                method: "GET", // 强制 GET 模式用于 Intro 代理
                 headers: reqHeaders,
                 redirect: "manual"
             });
 
-            if ([301, 302, 307, 308].includes(response.status) && currentRedirects < maxRedirects) {
+            // 内部消化 3xx 重定向
+            if ([301, 302, 303, 307, 308].includes(response.status) && currentRedirects < maxRedirects) {
                 currentRedirects++;
                 let location = response.headers.get("Location");
+                if (!location) return response;
 
-                // 处理相对路径重定向
-                if (location && !location.startsWith("http")) {
-                    location = new URL(location, TARGET_BASE).toString();
-                } else if (location) {
-                    // 如果重定向到了 Vercel 域名，我们强制将其改写回代理域名进行请求
+                // 解析跳转目标
+                if (location.startsWith("/")) {
+                    location = TARGET_BASE + location;
+                } else {
                     const locUrl = new URL(location);
                     locUrl.hostname = TARGET_DOMAIN;
+                    locUrl.protocol = "https:";
                     location = locUrl.toString();
                 }
-
                 return fetchRecursively(location);
             }
 
-            const headers = cleanHeaders(response.headers);
+            // 关键：构建全新的响应，彻底切断后端传输过来的重定向或域名相关头信息
+            const responseHeaders = cleanHeaders(response.headers);
+
+            // 彻底移除 Location 防止浏览器根据缓存跳转
+            responseHeaders.delete("Location");
+            responseHeaders.delete("Refresh");
+
+            // 覆盖安全头，防止 Vercel 的域名保护生效
+            responseHeaders.set("X-Frame-Options", "SAMEORIGIN");
+            responseHeaders.set("Content-Security-Policy", "upgrade-insecure-requests");
+
             return new Response(response.body, {
                 status: response.status,
                 statusText: response.statusText,
-                headers: headers
+                headers: responseHeaders
             });
         }
 
