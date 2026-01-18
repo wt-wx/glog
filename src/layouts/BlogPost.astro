@@ -7,13 +7,15 @@ import FormattedDate from '../components/FormattedDate.astro';
 import Header from '../components/Header.astro';
 
 import Giscus from '../components/Giscus.astro';
+import XReplies from '../components/XReplies.astro';
 
 type Props = CollectionEntry<'blog'>['data'] & { 
 	headings?: { depth: number; slug: string; text: string }[],
-	seriesPosts?: CollectionEntry<'blog'>[] 
+	seriesPosts?: CollectionEntry<'blog'>[],
+	id: string
 };
 
-const { title, description, pubDate, updatedDate, heroImage, headings, seriesPosts } = Astro.props;
+const { title, description, pubDate, updatedDate, heroImage, headings, seriesPosts, id } = Astro.props;
 ---
 
 <html lang="en">
@@ -86,6 +88,7 @@ const { title, description, pubDate, updatedDate, heroImage, headings, seriesPos
 						</div>
 					)}
 
+					<XReplies slug={id} />
 					<Giscus />
 				</article>
 

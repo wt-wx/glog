@@ -1,0 +1,23 @@
+name: Supabase Keep Alive
+
+on:
+  schedule:
+    # Runs at 00:00 UTC every Tuesday and Friday (Twice a week to be safe)
+    - cron: '0 0 * * 2,5'
+  workflow_dispatch: # Allow manual triggering
+
+jobs:
+  keep-alive:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v1
+      
+      - name: Install dependencies
+        run: bun install
+        
+      - name: Run keep-alive script
+        run: bun run supabase-keep-alive
+        env:
+          PUBLIC_SUPABASE_URL: ${{ secrets.PUBLIC_SUPABASE_URL }}
+          PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.PUBLIC_SUPABASE_ANON_KEY }}

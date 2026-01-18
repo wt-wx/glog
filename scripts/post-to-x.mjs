@@ -29,6 +29,14 @@ async function postNewArticle(slug) {
         console.log('Posting to X...');
         const tweet = await client.v2.tweet(tweetText);
         console.log(`Successfully posted! Tweet ID: ${tweet.data.id}`);
+
+        // Update the markdown file with tweetId
+        const updatedContent = matter.stringify(file.replace(/---[\s\S]*?---/, ''), {
+            ...data,
+            tweetId: tweet.data.id
+        });
+        fs.writeFileSync(postPath, updatedContent);
+        console.log(`Updated ${slug}.md with Tweet ID.`);
     } catch (error) {
         console.error('Error posting to X:', error);
     }

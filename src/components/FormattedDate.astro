@@ -14,4 +14,14 @@ const { date } = Astro.props;
 			day: 'numeric',
 		})
 	}
+    <span class="ml-1 opacity-60">
+        {
+            date.toLocaleTimeString('en-us', {
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: false
+            })
+        }
+    </span>
 </time>

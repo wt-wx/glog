@@ -1,0 +1,76 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
+
+// Ideally, this data would come from a NAS API or a localized JSON file
+const photos = [
+  {
+    url: 'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&q=80&w=1000',
+    title: 'Morning Mist',
+    location: 'NAS / Cloud Drive',
+    date: '2026-01-18'
+  },
+  {
+    url: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&q=80&w=1000',
+    title: 'Deep Forest',
+    location: 'NAS / Forest Cam',
+    date: '2026-01-15'
+  },
+  {
+    url: 'https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&q=80&w=1000',
+    title: 'Alpine Lake',
+    location: 'NAS / Travel',
+    date: '2026-01-10'
+  }
+];
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<BaseHead title={`Gallery | ${SITE_TITLE}`} description="Visual memories synced from private NAS." />
+	</head>
+	<body class="bg-background text-foreground antialiased selection:bg-brand/30">
+		<Header />
+		<main class="max-w-7xl mx-auto px-6 py-12 md:py-24 animate-in fade-in slide-in-from-bottom-4 duration-1000">
+			<header class="mb-16 md:mb-24 text-center">
+				<h1 class="text-5xl md:text-8xl font-black tracking-tight mb-8 bg-gradient-to-r from-foreground via-foreground/70 to-foreground bg-clip-text text-transparent">
+					Gallery
+				</h1>
+				<p class="text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+					A collection of visual moments, automatically synchronized from my private NAS storage. 
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1 bg-brand/10 text-brand text-xs font-bold rounded-full ml-2 uppercase tracking-wider">NAS Connected</span>
+				</p>
+			</header>
+
+			<section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+				{photos.map((photo) => (
+					<div class="group relative aspect-[4/5] overflow-hidden rounded-3xl bg-muted shadow-xl hover:shadow-2xl transition-all duration-500 hover:-translate-y-2">
+						<img 
+							src={photo.url} 
+							alt={photo.title}
+							class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 grayscale group-hover:grayscale-0"
+							loading="lazy"
+						/>
+						<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col justify-end p-8">
+							<p class="text-brand font-mono text-xs mb-2 translate-y-4 group-hover:translate-y-0 transition-transform duration-500 delay-75 uppercase tracking-widest">{photo.location} • {photo.date}</p>
+							<h3 class="text-2xl font-bold text-white translate-y-4 group-hover:translate-y-0 transition-transform duration-500 delay-150">{photo.title}</h3>
+						</div>
+					</div>
+				))}
+			</section>
+
+            <footer class="mt-24 text-center">
+                <div class="inline-flex flex-col items-center gap-4 p-8 rounded-3xl bg-muted/30 border border-muted/50 backdrop-blur-xl">
+                    <p class="text-muted-foreground font-medium">Want to see more?</p>
+                    <a href="mailto:nas@geniux.net" class="px-8 py-3 bg-foreground text-background dark:bg-white dark:text-black font-bold rounded-full hover:bg-brand hover:text-white transition-all shadow-lg hover:shadow-brand/20">
+                        Request Access
+                    </a>
+                </div>
+            </footer>
+		</main>
+		<Footer />
+	</body>
+</html>

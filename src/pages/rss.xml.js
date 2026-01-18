@@ -2,8 +2,10 @@ import { getCollection, render } from 'astro:content';
 import rss from '@astrojs/rss';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 
+import { getBlogPosts, getSortedBlogPosts } from '../lib/content';
+
 export async function GET(context) {
-	const posts = await getCollection('blog');
+	const posts = await getSortedBlogPosts();
 	const items = await Promise.all(posts.map(async (post) => {
 		const { Content } = await render(post);
 		return {

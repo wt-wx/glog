@@ -8,12 +8,15 @@
     "preview": "astro preview",
     "astro": "astro",
     "sync-x": "node scripts/sync-x.mjs",
-    "push-x": "node scripts/post-to-x.mjs"
+    "sync-replies": "node scripts/sync-replies.mjs",
+    "push-x": "node scripts/post-to-x.mjs",
+    "supabase-keep-alive": "node scripts/supabase-keep-alive.mjs"
   },
   "dependencies": {
     "@astrojs/mdx": "^4.3.13",
     "@astrojs/rss": "^4.0.14",
     "@astrojs/sitemap": "^3.6.0",
+    "@supabase/supabase-js": "^2.90.1",
     "@tailwindcss/vite": "^4.1.18",
     "astro": "^5.16.6",
     "contentful-management": "^11.67.0",

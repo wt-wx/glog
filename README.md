@@ -19,6 +19,18 @@
 
 ## 🏗 功能版本迭代 (Version History)
 
+### v1.5.0 - 隐私保护与社交深度集成
+- **Privacy Lock (Supabase)**: 
+  - 集成 Supabase Auth & X Login。
+  - 为博文引入“访问暗号”机制，支持对特定敏感内容的权限锁定。
+- **Interactive Sync (X Replies)**: 
+  - 引入 `sync-replies` 脚本，自动抓取推特评论并落成本地数据。
+  - 博文下方新增互动区，实时展示来自 X 的讨论。
+- **NAS Gallery**: 
+  - 启用 `/gallery` 页面，支持私有 NAS 图片库的外部链接集成。
+- **Cloudflare Hybrid Worker**: 
+  - 统一 `geniux.net` 与 `glog.geniux.net` 的路由逻辑，实现单 Worker 全站加速。
+
 ### v1.4.0 - 知识图谱与海量导航
 - **Benchmarks (智能书签库)**: 
   - 引入 `/bookmarks` 页面，支持 4700+ 浏览器书签的自动化同步与归类。
@@ -87,10 +99,17 @@
 ---
 title: '示例标题'
 description: '简短描述'
-pubDate: '2026-01-06'
-series: '示例系列' 
-tags: ['示例标签1', '示例标签2', '示例标签3']
-heroImage: '../../assets/blog-placeholder-about.jpg'
+pubDate: '2026-01-18 12:08:00'  # 发布时间 (建议格式: YYYY-MM-DD HH:mm:ss)
+# updatedDate: '2026-01-18'   # 更新日期 (可选)
+series: '示例系列'             # 系列名称 (可选)
+tags: ['标签1', '标签2']       # 标签数组
+heroImage: '../../assets/blog-placeholder-about.jpg' # 封面图 (支持本地路径或 NAS 链接)
+# 可选：内容保护 (设置后将强制 X Login + 访问案号)
+# password: '2026'
+# 可选：预发布/草稿 (设为 true 则仅在本地开发可见，构建不发布)
+# draft: true
+# 自动生成：发布到 X 后由脚本填入
+# tweetId: '1234567890' 
 ---
 ```
 
@@ -104,7 +123,34 @@ Glog 生成的 `rss.xml` 已优化，你可以利用以下工具实现自动化�
 - **WordPress**: 后台导入工具指向 `/rss.xml`。
 - **Facebook/Blogger**: 使用 [IFTTT](https://ifttt.com) 的 RSS-to-Action 方案。
 
----
+### 4. 评论系统配置 (Giscus)
+Glog 集成了基于 GitHub Discussions 的 Giscus 评论系统。
+1. 在你的 GitHub 仓库设置中开启 **Discussions**。
+2. 访问 [giscus.app](https://giscus.app) 输入你的仓库名。
+3. 获取 `data-repo-id` 和 `data-category-id`。
+4. 修改 `src/components/Giscus.astro` 中的对应参数。
+
+## 🚢 部署与分发 (Deployment & Distribution)
+
+Glog 采用多云容灾与全球加速架构，确保在任何网络环境下都能快速访问：
+
+### 1. 负载均衡 (Load Balancer)
+使用 **Cloudflare Worker** 作为全球流量入口 (`glog.geniux.net`)，实现智能路由与负载均衡：
+- **分发策略**：基于地理位置 (Geo-Routing) 与权重 (Weighted Selecting) 自动分发。
+- **目标终端**：
+    - 🇨🇳 **Vercel**: `glog.vercel.geniux.net` (中国大陆及美洲主节点)
+    - 🌏 **Netlify**: `glog.netlify.geniux.net` (全球备选与回源节点)
+    - ⚡ **EdgeOne (QCloud)**: `glog.qcloud.geniux.net` (亚太地区加速节点)
+- **核心逻辑**：参见 [`cloudflare.worker.js`](./cloudflare.worker.js)。
+
+### 2. 代码托管
+代码统一托管于 GitHub：[wt-wx/glog](https://github.com/wt-wx/glog.git)
+
+### 3. 页面呈现
+后端部署于以下平台，实现全静态、无服务器化的页面呈现：
+- **Vercel**: 提供 Edge Runtime 支持。
+- **Netlify**: 作为多云备份。
+- **EdgeOne (Tencent Cloud)**: 针对亚太网络环境深度优化。
 
 ---
 
@@ -119,18 +165,19 @@ Glog 生成的 `rss.xml` 已优化，你可以利用以下工具实现自动化�
 
 ## 📅 未来路线图与技术债 (Roadmap & Tech Debt)
 
-### 1. 内容安全与隐私保护 (待实现)
-- [ ] **多重认证锁定**：集成 Supabase Auth / X Login。实现“身份验证 + 访问暗号”的双重锁机制，保护特定隐私博文。
-- [ ] **静态加密方案**：研究基于 AES-GCM 的 Markdown 内容构建时加密，确保在私有库和托管端的绝对安全性。
+### 1. 内容安全与隐私保护
+- [x] **多重认证锁定**：集成 Supabase Auth / X Login。实现“身份验证 + 访问暗号”的双重锁机制，保护特定隐私博文。
+- [ ] **静态加密方案**：研究基于 AES-GCM 的 Markdown 内容构建时加密 (暂缓实现)。
 
-### 2. 生态集成强化
-- [ ] **Obsidian 自动化管线**：目前支持手动同步，未来计划实现基于 GitHub Actions 的 Obsidian 笔记库自动触发构建，实现“写毕即发”。
-- [ ] **图床集成 (Gallery)**：完善已预留的 `/gallery` 入口，集成 Lsky Pro 或类似自建图床 API，实现博文图片的统一管理。
+### 2. 生态集成强化 (NAS/Obsidian)
+- [x] **NAS 图床集成**：利用 NAS 的“共享链接”功能，将 `heroImage` 或文中图片替换为 NAS 节点的 HTTP 直连地址，实现私有化图床管理。
+- [x] **Obsidian 手动同步**：参考 `docs/obsidian-sync.md`，通过 NAS 挂载或 Git 插件将笔记库一键推送到 `src/content/blog/`。
+- [ ] **自动化管线**：未来计划实现基于 GitHub Actions 的自动触发。
 
 ### 3. X API 高级应用
-- [ ] **多向交互同步**：利用已配置的 X API，实现推特评论自动抓取并同步回博文下方。
+- [x] **多向交互同步**：利用已配置的 X API，实现推特评论自动抓取并同步回博文下方。
 - [ ] **自动化分发**：进一步细化 `push-x` 脚本，支持自动上传博文配图至 X 媒体库。
 
 ---
 
-沉淀知识，持续成长。 **Glog v1.4.0 Ready for Deployment.**
+沉淀知识，持续成长。 **Glog v1.5.0 Ready for Deployment.**

@@ -1,9 +1,11 @@
 ---
-import { type CollectionEntry, getCollection, render } from 'astro:content';
+import { type CollectionEntry, render } from 'astro:content';
 import BlogPost from '../../layouts/BlogPost.astro';
+import PrivacyLock from '../../components/PrivacyLock.astro';
+import { getBlogPosts } from '../../lib/content';
 
 export async function getStaticPaths() {
-	const posts = await getCollection('blog');
+	const posts = await getBlogPosts();
 	return posts.map((post) => ({
 		params: { slug: post.id },
 		props: post,
@@ -14,8 +16,10 @@ type Props = CollectionEntry<'blog'>;
 const post = Astro.props;
 const { Content, headings } = await render(post);
 
+const isProtected = !!post.data.password;
+
 // Find other posts in the same series
-const allPosts = await getCollection('blog');
+const allPosts = await getBlogPosts();
 const seriesPosts = post.data.series 
 	? allPosts
 		.filter(p => p.data.series === post.data.series)
@@ -23,6 +27,15 @@ const seriesPosts = post.data.series
 	: [];
 ---
 
-<BlogPost {...post.data} headings={headings} seriesPosts={seriesPosts}>
-	<Content />
+<BlogPost {...post.data} id={post.id} headings={headings} seriesPosts={seriesPosts}>
+	{isProtected && <PrivacyLock slug={post.id} />}
+    <div id="protected-content" class={isProtected ? 'hidden' : ''}>
+	    <Content />
+    </div>
 </BlogPost>
+
+<style>
+    .hidden {
+        display: none;
+    }
+</style>
