@@ -169,13 +169,23 @@ export const introWorker = {
         const targetUrl = TARGET_BASE + targetPath + url.search;
 
         try {
+            // 关键修复：克隆并清理请求头，移除 Host 头以防止后端重定向回原始域名
+            const reqHeaders = new Headers(request.headers);
+            reqHeaders.set("Host", "glog.vercel.geniux.net");
+
             const response = await fetch(targetUrl, {
-                headers: request.headers,
-                redirect: "follow"
+                method: request.method,
+                headers: reqHeaders,
+                redirect: "manual" // 不自动跟进重定向，由 Worker 处理
             });
 
+            // 如果后端返回跳转，我们直接返回它，或者返回错误
+            if ([301, 302, 307, 308].includes(response.status)) {
+                const location = response.headers.get("Location");
+                return new Response(`Redirecting to: ${location}`, { status: response.status, headers: { "Location": location } });
+            }
+
             const headers = cleanHeaders(response.headers);
-            // 修正：显式传递 status 和 statusText，不能使用展开运算符
             return new Response(response.body, {
                 status: response.status,
                 statusText: response.statusText,
