@@ -161,10 +161,29 @@ async function handleWithCache(request) {
 // --- Worker 1: geniux-intro (geniux.net/*) ---
 export const introWorker = {
     async fetch(request) {
-        const TARGET = "https://glog.vercel.geniux.net/intro";
-        const response = await fetch(TARGET);
-        const headers = cleanHeaders(response.headers);
-        return new Response(response.body, { ...response, headers });
+        const url = new URL(request.url);
+        const TARGET_BASE = "https://glog.vercel.geniux.net";
+
+        // 如果访问根目录，代理到 /intro 页面；否则保留原始路径（用于加载资源）
+        const targetPath = url.pathname === "/" ? "/intro" : url.pathname;
+        const targetUrl = TARGET_BASE + targetPath + url.search;
+
+        try {
+            const response = await fetch(targetUrl, {
+                headers: request.headers,
+                redirect: "follow"
+            });
+
+            const headers = cleanHeaders(response.headers);
+            // 修正：显式传递 status 和 statusText，不能使用展开运算符
+            return new Response(response.body, {
+                status: response.status,
+                statusText: response.statusText,
+                headers: headers
+            });
+        } catch (e) {
+            return new Response(`Intro Proxy Error: ${e.message}`, { status: 502 });
+        }
     }
 };
 
@@ -179,7 +198,7 @@ export const balancerWorker = {
 export default {
     async fetch(request, env, ctx) {
         const url = new URL(request.url);
-        
+
         // 健康检查
         if (url.pathname === '/_health') {
             return new Response(JSON.stringify({ status: 'healthy', timestamp: new Date().toISOString() }), {
@@ -193,7 +212,7 @@ export default {
         if (url.hostname === "glog.geniux.net") {
             return balancerWorker.fetch(request);
         }
-        
+
         return new Response("Not Found", { status: 404 });
     }
 };
