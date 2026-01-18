@@ -162,27 +162,43 @@ async function handleWithCache(request) {
 export const introWorker = {
     async fetch(request) {
         const url = new URL(request.url);
-        const TARGET_BASE = "https://glog.vercel.geniux.net";
+        const TARGET_DOMAIN = "glog.vercel.geniux.net";
+        const TARGET_BASE = `https://${TARGET_DOMAIN}`;
 
-        // 如果访问根目录，代理到 /intro 页面；否则保留原始路径（用于加载资源）
-        const targetPath = url.pathname === "/" ? "/intro" : url.pathname;
-        const targetUrl = TARGET_BASE + targetPath + url.search;
+        // 关键点：如果访问的是根目录，尝试直接请求带斜杠的 /intro/ 避免重定向
+        const targetPath = url.pathname === "/" ? "/intro/" : url.pathname;
+        let targetUrl = TARGET_BASE + targetPath + url.search;
 
-        try {
-            // 关键修复：克隆并清理请求头，移除 Host 头以防止后端重定向回原始域名
+        const maxRedirects = 3;
+        let currentRedirects = 0;
+
+        async function fetchRecursively(fetchUrl) {
             const reqHeaders = new Headers(request.headers);
-            reqHeaders.set("Host", "glog.vercel.geniux.net");
+            reqHeaders.set("Host", TARGET_DOMAIN);
+            // 移除可能导致后端重定向的 Referer
+            reqHeaders.delete("Referer");
 
-            const response = await fetch(targetUrl, {
+            const response = await fetch(fetchUrl, {
                 method: request.method,
                 headers: reqHeaders,
-                redirect: "manual" // 不自动跟进重定向，由 Worker 处理
+                redirect: "manual"
             });
 
-            // 如果后端返回跳转，我们直接返回它，或者返回错误
-            if ([301, 302, 307, 308].includes(response.status)) {
-                const location = response.headers.get("Location");
-                return new Response(`Redirecting to: ${location}`, { status: response.status, headers: { "Location": location } });
+            if ([301, 302, 307, 308].includes(response.status) && currentRedirects < maxRedirects) {
+                currentRedirects++;
+                let location = response.headers.get("Location");
+
+                // 处理相对路径重定向
+                if (location && !location.startsWith("http")) {
+                    location = new URL(location, TARGET_BASE).toString();
+                } else if (location) {
+                    // 如果重定向到了 Vercel 域名，我们强制将其改写回代理域名进行请求
+                    const locUrl = new URL(location);
+                    locUrl.hostname = TARGET_DOMAIN;
+                    location = locUrl.toString();
+                }
+
+                return fetchRecursively(location);
             }
 
             const headers = cleanHeaders(response.headers);
@@ -191,6 +207,10 @@ export const introWorker = {
                 statusText: response.statusText,
                 headers: headers
             });
+        }
+
+        try {
+            return await fetchRecursively(targetUrl);
         } catch (e) {
             return new Response(`Intro Proxy Error: ${e.message}`, { status: 502 });
         }
