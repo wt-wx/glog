@@ -154,7 +154,32 @@ Glog 采用多云容灾与全球加速架构，确保在任何网络环境下都
 
 ---
 
-## 🛠 开发栈
+## � 维护与保活 (Maintenance & Keep-Alive)
+
+针对 Supabase 免费版在长期无活动（通常为 7 天）后会自动关停（Pause）的问题，Glog 设计了一套 **“全自动心跳保活” (Keep-Alive)** 策略，确保你的数据库始终处于活跃状态。
+
+### 实现方案
+项目已集成以下保活配置：
+
+1.  **心跳脚本 (`scripts/supabase-keep-alive.mjs`)**：
+    该脚本会利用现有的 Supabase 配置，定期向数据库发送一个微小的查询请求。这在 Supabase 的规则中会被计为“有效活动”。
+2.  **便捷命令**：
+    在 `package.json` 中配置了 `bun run supabase-keep-alive` 命令，可随时在本地手动测试。
+3.  **自动化流水线 (`.github/workflows/supabase-keep-alive.yml`)**：
+    核心组件。通过 GitHub Action 实现自动化监控：
+    - **执行频率**：每周二和周五的凌晨 0 点自动运行（一周两次，远超 7 天期限）。
+    - **运行环境**：基于 `bun` 运行时。
+
+### 操作建议
+为了使保活系统生效，请确保执行以下操作：
+1.  将代码推送到 GitHub。
+2.  在 GitHub 仓库的 **Settings -> Secrets and variables -> Actions** 中，添加以下两个密钥：
+    - `PUBLIC_SUPABASE_URL`: 你的 Supabase 项目 URL。
+    - `PUBLIC_SUPABASE_ANON_KEY`: 你的 Supabase API Key。
+
+---
+
+## �🛠 开发栈
 
 - **Astro 5**: 现代前端最快的内容框架。
 - **Tailwind v4**: 极致设计系统。
