@@ -162,71 +162,55 @@ async function handleWithCache(request) {
 export const introWorker = {
     async fetch(request) {
         const url = new URL(request.url);
-        const TARGET_DOMAIN = "glog.vercel.geniux.net";
-        const TARGET_BASE = `https://${TARGET_DOMAIN}`;
+        // 映射：根路径代理到 /intro/，其余保持不变（资源文件）
+        const path = url.pathname === "/" ? "/intro/" : url.pathname;
+        const search = url.search;
 
-        // 尝试直接请求带斜杠的路径
-        const targetPath = url.pathname === "/" ? "/intro/" : url.pathname;
-        const targetUrl = TARGET_BASE + targetPath + url.search;
+        // 尝试多个后端，避免单点故障或重定向循环
+        const backends = [
+            "glog.vercel.geniux.net",
+            "glog.netlify.geniux.net",
+            "glog.qcloud.geniux.net"
+        ];
 
-        const maxRedirects = 5;
-        let currentRedirects = 0;
+        for (const domain of backends) {
+            try {
+                const targetUrl = `https://${domain}${path}${search}`;
+                const reqHeaders = new Headers(request.headers);
 
-        async function fetchRecursively(fetchUrl) {
-            // 创建完全纯净的请求头
-            const reqHeaders = new Headers();
-            reqHeaders.set("Host", TARGET_DOMAIN);
-            reqHeaders.set("User-Agent", request.headers.get("User-Agent") || "Cloudflare Worker");
-            reqHeaders.set("Accept", request.headers.get("Accept") || "*/*");
-            reqHeaders.set("Accept-Language", request.headers.get("Accept-Language") || "en-US,en;q=0.9");
+                // 必须重写入站 Host 为目标后端域名，否则会导致重定向循环
+                reqHeaders.set("Host", domain);
+                // 移除 Referer 防止后端根据来源进行域名纠偏
+                reqHeaders.delete("Referer");
 
-            const response = await fetch(fetchUrl, {
-                method: "GET", // 强制 GET 模式用于 Intro 代理
-                headers: reqHeaders,
-                redirect: "manual"
-            });
+                const response = await fetch(targetUrl, {
+                    method: request.method,
+                    headers: reqHeaders,
+                    redirect: "follow" // 允许跟随后端可能存在的内部重定向
+                });
 
-            // 内部消化 3xx 重定向
-            if ([301, 302, 303, 307, 308].includes(response.status) && currentRedirects < maxRedirects) {
-                currentRedirects++;
-                let location = response.headers.get("Location");
-                if (!location) return response;
+                if (response.ok) {
+                    const headers = cleanHeaders(response.headers);
+                    // 彻底移除跳转相关的 Header，确保浏览器留在当前域名
+                    headers.delete("Location");
+                    headers.delete("Refresh");
 
-                // 解析跳转目标
-                if (location.startsWith("/")) {
-                    location = TARGET_BASE + location;
-                } else {
-                    const locUrl = new URL(location);
-                    locUrl.hostname = TARGET_DOMAIN;
-                    locUrl.protocol = "https:";
-                    location = locUrl.toString();
+                    return new Response(response.body, {
+                        status: response.status,
+                        statusText: response.statusText,
+                        headers: headers
+                    });
                 }
-                return fetchRecursively(location);
+            } catch (e) {
+                console.error(`Intro Sync Failed for ${domain}: ${e.message}`);
+                continue; // 尝试下一个后端
             }
-
-            // 关键：构建全新的响应，彻底切断后端传输过来的重定向或域名相关头信息
-            const responseHeaders = cleanHeaders(response.headers);
-
-            // 彻底移除 Location 防止浏览器根据缓存跳转
-            responseHeaders.delete("Location");
-            responseHeaders.delete("Refresh");
-
-            // 覆盖安全头，防止 Vercel 的域名保护生效
-            responseHeaders.set("X-Frame-Options", "SAMEORIGIN");
-            responseHeaders.set("Content-Security-Policy", "upgrade-insecure-requests");
-
-            return new Response(response.body, {
-                status: response.status,
-                statusText: response.statusText,
-                headers: responseHeaders
-            });
         }
 
-        try {
-            return await fetchRecursively(targetUrl);
-        } catch (e) {
-            return new Response(`Intro Proxy Error: ${e.message}`, { status: 502 });
-        }
+        return new Response("Intro Page Proxy Error: All backends unreachable or returned error.", {
+            status: 502,
+            headers: { "Content-Type": "text/plain; charset=utf-8" }
+        });
     }
 };
 
