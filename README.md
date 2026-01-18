@@ -79,13 +79,13 @@
 ```text
 ├── scripts/        # 自动化同步脚本 (Python/Node)
 ├── src/
-│   ├── components/  # 可复用组件 (Search, ToC, CookieConsent等)
-│   ├── content/     # 核心内容
-│   │   ├── blog/    # 深度文章
-│   │   └── xlog/    # 原生推文流
-│   ├── layouts/    # 页面布局
-│   ├── pages/      # 路由页面 (Tags, X-Log, Blog)
-│   └── styles/     # Tailwind v4 全局样式
+│	├── components/  # 可复用组件 (Search, ToC, CookieConsent等)
+│	├── content/     # 核心内容
+│	│	├── blog/    # 深度文章
+│	│	└── xlog/    # 原生推文流
+│	├── layouts/    # 页面布局
+│	├── pages/      # 路由页面 (Tags, X-Log, Blog)
+│	└── styles/     # Tailwind v4 全局样式
 ├── astro.config.mjs # 核心配置
 └── .env             # 隐私凭证 (X API)
 ```
@@ -154,7 +154,7 @@ Glog 采用多云容灾与全球加速架构，确保在任何网络环境下都
 
 ---
 
-## � 维护与保活 (Maintenance & Keep-Alive)
+## 🛠 维护与保活 (Maintenance & Keep-Alive)
 
 针对 Supabase 免费版在长期无活动（通常为 7 天）后会自动关停（Pause）的问题，Glog 设计了一套 **“全自动心跳保活” (Keep-Alive)** 策略，确保你的数据库始终处于活跃状态。
 
@@ -179,7 +179,7 @@ Glog 采用多云容灾与全球加速架构，确保在任何网络环境下都
 
 ---
 
-## �🛠 开发栈
+## 🛠 开发栈
 
 - **Astro 5**: 现代前端最快的内容框架。
 - **Tailwind v4**: 极致设计系统。
