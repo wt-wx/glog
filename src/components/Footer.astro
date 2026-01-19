@@ -42,27 +42,26 @@ const today = new Date();
 				<a href="https://vercel.com" target="_blank" class="hover:text-brand transition-colors">Vercel</a>
 			</div>
 		</div>
-	<!-- Back to Top Button (Collision-aware) -->
-	<button 
-		id="back-to-top" 
-		class="fixed z-40 w-12 h-12 flex items-center justify-center bg-background/80 backdrop-blur-xl border border-muted/50 rounded-full shadow-lg hover:shadow-brand/20 hover:border-brand transition-all transform translate-y-20 opacity-0 pointer-events-none group"
-		style="right: max(1.5rem, calc(50vw - 450px)); bottom: 100px;"
-		title="Back to Top"
-	>
-		<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="text-muted-foreground group-hover:text-brand transition-all group-hover:-translate-y-1"><path d="m18 15-6-6-6 6"/></svg>
-	</button>
+	</div>
 </footer>
+
+<!-- Back to Top Button -->
+<button 
+    id="back-to-top" 
+    class="fixed z-50 w-12 h-12 flex items-center justify-center bg-background/80 backdrop-blur-xl border border-muted/50 rounded-full shadow-lg hover:shadow-brand/20 hover:border-brand transition-all transform translate-y-20 opacity-0 pointer-events-none group"
+    style="right: max(1.5rem, calc(50vw - 450px)); bottom: 2rem;"
+    title="Back to Top"
+>
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="text-muted-foreground group-hover:text-brand transition-all group-hover:-translate-y-1"><path d="m18 15-6-6-6 6"/></svg>
+</button>
 
 <script>
 	const setupBackToTop = () => {
 		const topBtn = document.getElementById('back-to-top');
-		const footer = document.querySelector('footer');
-		if (!topBtn || !footer) return;
+		if (!topBtn) return;
 
 		const updatePosition = () => {
 			const scrollY = window.scrollY;
-			const windowHeight = window.innerHeight;
-			const footerRect = footer.getBoundingClientRect();
 			
 			// Show/Hide logic
 			if (scrollY > 400) {
@@ -71,15 +70,6 @@ const today = new Date();
 			} else {
 				topBtn.classList.add('translate-y-20', 'opacity-0', 'pointer-events-none');
 				topBtn.classList.remove('translate-y-0', 'opacity-100');
-			}
-
-			// Collision detection: lift button if footer is visible
-			const footerTop = footerRect.top;
-			if (footerTop < windowHeight) {
-				const offset = windowHeight - footerTop + 20; // 20px buffer above footer
-				topBtn.style.bottom = `${80 + offset}px`;
-			} else {
-				topBtn.style.bottom = '100px';
 			}
 		};
 

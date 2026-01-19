@@ -8,12 +8,18 @@ const searchData = posts.map(post => ({
   description: post.data.description,
   url: `/blog/${post.id}/`
 }));
+
+interface Props {
+  uid?: string;
+}
+
+const { uid = '' } = Astro.props;
 ---
 
 <div class="search-container">
   <!-- Trigger Button (PC) -->
   <button 
-    id="search-trigger-pc" 
+    id={`search-trigger-pc-${uid}`} 
     class="hidden md:flex items-center gap-3 px-3 py-1.5 bg-muted/20 hover:bg-muted/40 border border-dashed border-muted-foreground/30 rounded-lg transition-all cursor-pointer group"
   >
     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="text-muted-foreground group-hover:text-brand transition-colors"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
@@ -25,7 +31,7 @@ const searchData = posts.map(post => ({
 
   <!-- Trigger Button (Mobile) -->
   <button 
-    id="search-trigger-mobile" 
+    id={`search-trigger-mobile-${uid}`} 
     class="flex md:hidden p-2 text-muted-foreground hover:text-brand transition-colors cursor-pointer"
   >
     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
@@ -33,7 +39,7 @@ const searchData = posts.map(post => ({
 
   <!-- Native Dialog Modal -->
   <dialog 
-    id="search-dialog" 
+    id={`search-dialog-${uid}`} 
     class="p-0 m-0 w-full h-full max-w-full max-h-full shadow-2xl open:flex flex-col backdrop:backdrop-blur-xl backdrop:bg-black/40 border border-muted/50 sm:w-[95%] sm:max-w-2xl sm:h-max sm:min-h-[300px] sm:max-h-[calc(100%_-_8rem)] sm:rounded-2xl sm:mt-24 sm:mx-auto bg-background/95 text-foreground overflow-hidden animate-in zoom-in-95 fade-in duration-300"
   >
     <div class="relative overflow-hidden flex flex-col grow">
@@ -41,17 +47,17 @@ const searchData = posts.map(post => ({
       <div class="relative flex items-center p-4 border-b border-muted/20">
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="absolute left-7 text-muted-foreground"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
         <input 
-          id="search-input"
+          id={`search-input-${uid}`}
           type="text" 
           placeholder="Search..." 
           class="w-full bg-transparent border-none outline-none pl-12 pr-4 py-2 text-lg text-foreground placeholder:text-muted-foreground/50"
           autocomplete="off"
         />
-        <button id="search-close-mobile" class="md:hidden text-sm font-medium border border-muted/50 rounded-lg px-3 py-1 bg-muted/20 active:bg-muted/40 transition-colors">Cancel</button>
+        <button id={`search-close-mobile-${uid}`} class="md:hidden text-sm font-medium border border-muted/50 rounded-lg px-3 py-1 bg-muted/20 active:bg-muted/40 transition-colors">Cancel</button>
       </div>
 
       <!-- Results Area -->
-      <div id="search-results" class="flex-1 max-h-[60vh] overflow-y-auto p-4 space-y-2 empty:hidden">
+      <div id={`search-results-${uid}`} class="flex-1 max-h-[60vh] overflow-y-auto p-4 space-y-2 empty:hidden">
         <!-- Results injected here -->
       </div>
       
@@ -69,15 +75,17 @@ const searchData = posts.map(post => ({
 
 <script is:inline src="https://cdn.jsdelivr.net/npm/fuse.js/dist/fuse.basic.min.js"></script>
 
-<script define:vars={{ searchData }}>
+<script define:vars={{ searchData, uid }}>
   document.addEventListener('astro:page-load', () => {
     let fuse;
-    const dialog = document.getElementById('search-dialog');
-    const triggerPc = document.getElementById('search-trigger-pc');
-    const triggerMobile = document.getElementById('search-trigger-mobile');
-    const input = document.getElementById('search-input');
-    const resultsDir = document.getElementById('search-results');
-    const closeMobile = document.getElementById('search-close-mobile');
+    const dialog = document.getElementById(`search-dialog-${uid}`);
+    const triggerPc = document.getElementById(`search-trigger-pc-${uid}`);
+    const triggerMobile = document.getElementById(`search-trigger-mobile-${uid}`);
+    const input = document.getElementById(`search-input-${uid}`);
+    const resultsDir = document.getElementById(`search-results-${uid}`);
+    const closeMobile = document.getElementById(`search-close-mobile-${uid}`);
+
+    if (!dialog) return; // Guard clause in case element is missing
 
     function openSearch() {
       dialog.showModal();
@@ -110,15 +118,28 @@ const searchData = posts.map(post => ({
       }
     });
 
-    // Keyboard support
+    // Keyboard support - GLOBAL listening but only opens ONE dialog? 
+    // If we have two instances, both listen. Both open?
+    // We should probably only let one handle the keyboard shortcut or default to the desktop one.
+    // For now, let's allow both to try, or check visibility.
     const handleKeyDown = (e) => {
       if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
         e.preventDefault();
-        openSearch();
+        // Only open if this instance is visible or "active"
+        // Since we can't easily tell which one is "correct", let's strictly rely on button clicks for now.
+        // OR: Only the desktop one (uid='desktop') listens?
+        if (uid === 'desktop' || (!uid && triggerPc && getComputedStyle(triggerPc).display !== 'none')) {
+             openSearch();
+        }
       }
     };
     
-    window.addEventListener('keydown', handleKeyDown);
+    // Only attach global keydown if specific condition met to avoid duplicates?
+    // Actually, duplicate listeners opening duplicate dialogs is bad.
+    // Let's restrict keyboard shortcut to 'desktop' uid.
+    if (uid === 'desktop') {
+        window.addEventListener('keydown', handleKeyDown);
+    }
 
     // Search logic
     input?.addEventListener('input', (e) => {
