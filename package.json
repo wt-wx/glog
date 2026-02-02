@@ -10,7 +10,9 @@
     "sync-x": "node scripts/sync-x.mjs",
     "sync-replies": "node scripts/sync-replies.mjs",
     "push-x": "node scripts/post-to-x.mjs",
-    "supabase-keep-alive": "node scripts/supabase-keep-alive.mjs"
+    "supabase-keep-alive": "node scripts/supabase-keep-alive.mjs",
+    "podcast:convert": "node scripts/convert-to-podcast.mjs",
+    "podcast:perf-test": "node scripts/podcast-perf-test.mjs"
   },
   "dependencies": {
     "@astrojs/mdx": "^4.3.13",
@@ -25,7 +27,8 @@
     "gray-matter": "^4.0.3",
     "sharp": "^0.34.3",
     "tailwindcss": "^4.1.18",
-    "twitter-api-v2": "^1.28.0"
+    "twitter-api-v2": "^1.28.0",
+    "ffmpeg-static": "^5.2.1"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.6",

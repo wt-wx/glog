@@ -1,0 +1,288 @@
+---
+const { blogPostId, showDetails = false } = Astro.props;
+
+const { getConversionProgress } = await import('../lib/podcast/index.mjs');
+
+let podcastStatus = null;
+
+try {
+  podcastStatus = await getConversionProgress(blogPostId);
+} catch (error) {
+  console.error('获取播客状态失败:', error);
+}
+
+const getStatusIcon = (status: string) => {
+  switch (status) {
+    case 'processing':
+      return '🎙️';
+    case 'completed':
+      return '✅';
+    case 'failed':
+      return '❌';
+    case 'pending':
+    default:
+      return '⏳';
+  }
+};
+
+const getStageStatus = (stage: { status: string }) => {
+  if (stage.status === 'completed') return '✓';
+  if (stage.status === 'in_progress') return '⟳';
+  return '○';
+};
+---
+
+{podcastStatus && (
+  <div class="podcast-status-container">
+    <div class={`podcast-status status-${podcastStatus.status}`}>
+      <div class="status-header">
+        <span class="status-icon">{getStatusIcon(podcastStatus.status)}</span>
+        <span class="status-text">
+          {podcastStatus.status === 'processing' && '播客转换中...'}
+          {podcastStatus.status === 'completed' && '播客已发布'}
+          {podcastStatus.status === 'failed' && '播客转换失败'}
+          {podcastStatus.status === 'pending' && '等待转换'}
+        </span>
+      </div>
+
+      {podcastStatus.status === 'processing' && (
+        <div class="progress-section">
+          <div class="progress-bar">
+            <div 
+              class="progress-fill" 
+              style={`width: ${podcastStatus.progress}%`}
+            ></div>
+          </div>
+          <div class="progress-text">{podcastStatus.progress}%</div>
+        </div>
+      )}
+
+      {podcastStatus.status === 'completed' && podcastStatus.result && (
+        <div class="result-section">
+          <a 
+            href={podcastStatus.result.audioUrl} 
+            target="_blank"
+            rel="noopener noreferrer"
+            class="audio-link"
+          >
+            🎧 收听播客
+          </a>
+          {podcastStatus.result.duration && (
+            <span class="duration">
+              时长: {podcastStatus.result.duration.minutes} 分钟
+            </span>
+          )}
+        </div>
+      )}
+
+      {podcastStatus.status === 'failed' && podcastStatus.error && (
+        <div class="error-section">
+          <p class="error-message">{podcastStatus.error}</p>
+        </div>
+      )}
+
+      {showDetails && podcastStatus.stages && (
+        <div class="stages-section">
+          <h4>转换进度</h4>
+          <ul class="stages-list">
+            <li>
+              <span class="stage-status">{getStageStatus(podcastStatus.stages.contentProcessing)}</span>
+              <span>内容处理</span>
+            </li>
+            <li>
+              <span class="stage-status">{getStageStatus(podcastStatus.stages.audioGeneration)}</span>
+              <span>音频生成</span>
+            </li>
+            <li>
+              <span class="stage-status">{getStageStatus(podcastStatus.stages.audioDownload)}</span>
+              <span>音频下载</span>
+            </li>
+            <li>
+              <span class="stage-status">{getStageStatus(podcastStatus.stages.validation)}</span>
+              <span>质量验证</span>
+            </li>
+          </ul>
+        </div>
+      )}
+
+      <div class="status-meta">
+        <span class="updated-time">
+          {new Date(podcastStatus.updatedAt).toLocaleString('zh-CN')}
+        </span>
+      </div>
+    </div>
+  </div>
+)}
+
+<style>
+.podcast-status-container {
+  margin: 1.5rem 0;
+}
+
+.podcast-status {
+  padding: 1rem;
+  border-radius: 8px;
+  border-left: 4px solid;
+  background-color: #f8f9fa;
+  transition: all 0.3s ease;
+}
+
+.podcast-status.status-pending {
+  border-left-color: #9ca3af;
+}
+
+.podcast-status.status-processing {
+  border-left-color: #3b82f6;
+}
+
+.podcast-status.status-completed {
+  border-left-color: #10b981;
+}
+
+.podcast-status.status-failed {
+  border-left-color: #ef4444;
+}
+
+.status-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 500;
+}
+
+.status-icon {
+  font-size: 1.2rem;
+}
+
+.progress-section {
+  margin-top: 1rem;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 8px;
+  background-color: #e5e7eb;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background-color: #3b82f6;
+  transition: width 0.3s ease;
+}
+
+.progress-text {
+  text-align: right;
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin-top: 0.25rem;
+}
+
+.result-section {
+  margin-top: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.audio-link {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  background-color: #10b981;
+  color: white;
+  text-decoration: none;
+  border-radius: 4px;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+}
+
+.audio-link:hover {
+  background-color: #059669;
+}
+
+.duration {
+  color: #6b7280;
+  font-size: 0.875rem;
+}
+
+.error-section {
+  margin-top: 1rem;
+}
+
+.error-message {
+  color: #ef4444;
+  font-size: 0.875rem;
+  margin: 0;
+}
+
+.stages-section {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e5e7eb;
+}
+
+.stages-section h4 {
+  margin: 0 0 0.5rem 0;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #6b7280;
+}
+
+.stages-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  font-size: 0.875rem;
+}
+
+.stages-list li {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.25rem;
+  color: #374151;
+}
+
+.stage-status {
+  width: 1.5rem;
+  text-align: center;
+  font-weight: bold;
+}
+
+.status-meta {
+  margin-top: 0.75rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid #e5e7eb;
+}
+
+.updated-time {
+  font-size: 0.75rem;
+  color: #9ca3af;
+}
+
+@media (prefers-color-scheme: dark) {
+  .podcast-status {
+    background-color: #1f2937;
+  }
+
+  .status-text,
+  .stages-list li {
+    color: #f3f4f6;
+  }
+
+  .duration,
+  .updated-time {
+    color: #9ca3af;
+  }
+
+  .progress-bar {
+    background-color: #374151;
+  }
+
+  .stages-section h4 {
+    color: #d1d5db;
+  }
+}
+</style>

@@ -19,6 +19,15 @@
 
 ## 🏗 功能版本迭代 (Version History)
 
+### v1.6.0 - 博客转播客 (AI Hybrid Cloud) [Partially Implemented]
+- **AI Podcast Generator (混合云架构)**:
+  - 推出 **Blog-to-Podcast** 自动化管线：利用 AI 将 Markdown 博客一键转为专业播客节目。 ✅ (Implemented in `src/lib/podcast`)
+  - **Hybrid Architecture (SaaS + VPS)**:
+    - **Deep Dive Mode**: 利用已有的 **VPS (4C4G)** 部署私有 `NotebookLM-Bridge` 服务，运行 Playwright 模拟用户操作，生成高质量双人深度对话音频。 ❌ (Pending: Bridge service & Playwright logic not in current repo)
+    - **News Mode**: 集成 **Wondercraft / ElevenLabs API**，为短快讯提供稳定、可控的专业播音级 TTS 服务。 ✅ (Implemented)
+  - **Quality Control**: 引入自动音频质量分析与长度校验，确保输出内容达标。 ✅ (Implemented via FFmpeg/FFprobe)
+  - **Podcast Hosting**: 深度集成 **Transistor.fm** API，实现音频上传、Episode 创建与 RSS Feed 推送的全流程自动化。 ✅ (Implemented)
+
 ### v1.5.0 - 隐私保护与社交深度集成
 - **Privacy Lock (Supabase)**: 
   - 集成 Supabase Auth & X Login。
@@ -117,13 +126,19 @@ heroImage: '../../assets/blog-placeholder-about.jpg' # 封面图 (支持本地�
 ```bash
 bun run push-x [your-post-filename]
 ```
+### 3. 其他社交链接
 
-### 3. 同步到其他社交平台
+ - linktr.ee/geniux
+ - about.me/geniux
+ - geniux.wordpress.com
+ - blogger.geniux.net
+
+### 4. 同步到其他社交平台
 Glog 生成的 `rss.xml` 已优化，你可以利用以下工具实现自动化：
 - **WordPress**: 后台导入工具指向 `/rss.xml`。
 - **Facebook/Blogger**: 使用 [IFTTT](https://ifttt.com) 的 RSS-to-Action 方案。
 
-### 4. 评论系统配置 (Giscus)
+### 5. 评论系统配置 (Giscus)
 Glog 集成了基于 GitHub Discussions 的 Giscus 评论系统。
 1. 在你的 GitHub 仓库设置中开启 **Discussions**。
 2. 访问 [giscus.app](https://giscus.app) 输入你的仓库名。
@@ -185,6 +200,7 @@ Glog 采用多云容灾与全球加速架构，确保在任何网络环境下都
 - **Tailwind v4**: 极致设计系统。
 - **Bun**: 超快运行时。
 - **Fuse.js**: 本地轻量级全文搜索引擎。
+- **Playwright (Python)**: 用于 VPS 端自动化生成 NotebookLM 音频。
 
 ---
 
@@ -203,6 +219,30 @@ Glog 采用多云容灾与全球加速架构，确保在任何网络环境下都
 - [x] **多向交互同步**：利用已配置的 X API，实现推特评论自动抓取并同步回博文下方。
 - [ ] **自动化分发**：进一步细化 `push-x` 脚本，支持自动上传博文配图至 X 媒体库。
 
+### 4. 播客自动化 (Podcast Automation)
+- [x] **混合架构设计**: 完成 SaaS (Wondercraft) + VPS (NotebookLM) 的技术选型与路由设计。
+- [x] **核心逻辑实现**: `src/lib/podcast` 已完成 News Mode、质量控制与 Transistor 托管集成。
+- [ ] **VPS 服务开发**: 独立开发 `NotebookLM-Bridge` (Playwright + Python) 并部署至 4C4G VPS。
+- [ ] **UI/API 联动**: 补齐 `podcast-manager.astro` 依赖的 `/api/podcast/*` 后端接口（Publish, Edit, Analytics）。
+
+## ⚠️ 技术债务清单 (Technical Debt)
+
+### 1. 架构稳定性
+- **环境依赖风险**: `quality-control.mjs` 强依赖系统级 `ffmpeg` 和 `ffprobe`。在 serverless 环境下部署需配置特定的 Layer 或切换为 WASM 版本。
+- **混合云异步同步**: 尚未实现针对 VPS 生成失败时的自动 fallback 到 SaaS 引擎的逻辑。
+
+### 2. 接口完整性
+- **播客管理 API**: `src/pages/podcast-manager.astro` 调用的多个管理接口（如 `/api/podcast/publish`）尚未实现或仅有 Mock。
+- **Webhook 安全**: `/api/webhook/podcast.js` 缺乏请求签名校验 (HMAC)，存在被恶意触发生成任务的风险。
+
+### 3. 数据持久化
+- **状态丢失**: 转换进度目前存储在本地内存或临时文件，重启后正在进行的任务状态会丢失。需迁移至 Supabase 或 Redis。
+- **RSS 自动刷新**: 需打通 `convertBlogToPodcast` 完成后的本地 `rss-feed-generator.mjs` 自动触发逻辑。
+
+### 4. 开发规范
+- **环境变量缺失**: 缺乏 `.env.example` 对 `WONDERCRAFT_API_KEY`, `ELEVENLABS_API_KEY`, `TRANSISTOR_API_KEY` 等关键变量的统一定义与校验。
+- **错误重试机制**: `TransistorFMClient` 的速率限制处理过于简单，缺乏指数退避策略。
+
 ---
 
-沉淀知识，持续成长。 **Glog v1.5.0 Ready for Deployment.**
+沉淀知识，持续成长。 **Glog v1.6.0 Development in Progress.**
