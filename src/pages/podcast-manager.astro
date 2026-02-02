@@ -21,9 +21,8 @@ interface HostingStats {
   totalDownloads: number;
   averageDownloads: number;
 }
----
 
-<interface Props {
+interface Props {
   postId: string;
   showManagement?: boolean;
 }
@@ -65,11 +64,12 @@ const getStatusIcon = (status: string) => {
       return '🔄';
   }
 };
+---
 
 <div class="podcast-manager">
   <h2>🎙️ 播客管理控制台</h2>
 
-  {showManagement && conversionProgress && conversionProgress.status === 'completed' ? (
+  {showManagement && conversionProgress && conversionProgress.status === 'completed' && (
     <section class="publish-section">
       <h3>发布播客到 Transistor.fm</h3>
       <p class="description">将已生成的播客 episode 自动发布到播客托管平台</p>
@@ -712,7 +712,7 @@ const getStatusIcon = (status: string) => {
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({
-            postId: '{postId}'
+            postId: `${postId}`
           })
         });
         
@@ -755,7 +755,7 @@ const getStatusIcon = (status: string) => {
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({
-            postId: '{postId}',
+            postId: `${postId}`,
             tweet: true
           })
         });
@@ -933,7 +933,7 @@ const getStatusIcon = (status: string) => {
     }
     
     async function copyAudioUrl() {
-      const url = '{conversionProgress.result?.audioUrl || ''}';
+      const url = `${conversionProgress?.result?.audioUrl || ''}`;
       
       if (!url) {
         alert('没有可复制的音频链接');
@@ -949,7 +949,7 @@ const getStatusIcon = (status: string) => {
     }
     
     async function openInNewTab() {
-      const url = '{conversionProgress.result?.audioUrl || ''}';
+      const url = `${conversionProgress?.result?.audioUrl || ''}`;
       
       if (!url) {
         alert('没有可打开的音频链接');
@@ -960,7 +960,7 @@ const getStatusIcon = (status: string) => {
     }
     
     async function showRSS() {
-      const url = '{conversionProgress.result?.shareUrl || ''}';
+      const url = `${conversionProgress?.result?.shareUrl || ''}`;
       
       if (!url) {
         alert('没有可打开的分享链接');
