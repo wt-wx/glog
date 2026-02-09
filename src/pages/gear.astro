@@ -1,0 +1,70 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import { SITE_TITLE } from '../consts';
+import gearData from '../data/gear.json';
+
+const description = "The hardware and equipment I use for my daily workflow.";
+---
+
+<!doctype html>
+<html lang="zh-CN">
+	<head>
+		<BaseHead title={`Gear | ${SITE_TITLE}`} description={description} />
+	</head>
+	<body class="bg-background text-foreground antialiased transition-colors duration-300 font-['Outfit',sans-serif]">
+		<Header />
+		<main class="max-w-7xl mx-auto px-6 py-20 md:py-32 relative overflow-hidden">
+			<!-- Abstract Background -->
+			<div class="absolute top-0 right-0 w-[500px] h-[500px] bg-brand/5 blur-[120px] rounded-full -z-10 translate-x-1/2 -translate-y-1/2"></div>
+			
+			<div class="space-y-16">
+				<!-- Header Section -->
+				<header class="max-w-3xl space-y-6 animate-in fade-in slide-in-from-bottom-8 duration-1000">
+					<h1 class="text-5xl md:text-7xl font-extrabold tracking-tight leading-tight">
+						My <span class="bg-clip-text text-transparent bg-gradient-to-r from-brand to-brand-dark">Gear</span> ⌨️
+					</h1>
+					<p class="text-xl md:text-2xl text-muted-foreground font-light leading-relaxed">
+						{description}
+					</p>
+				</header>
+
+				<!-- Categories -->
+				<div class="space-y-20">
+					{gearData.map((category) => (
+						<section class="space-y-10 animate-in fade-in slide-in-from-bottom-12 duration-1000 delay-200">
+							<div class="flex items-center gap-4">
+								<h2 class="text-2xl md:text-3xl font-bold tracking-tight px-4 py-1.5 bg-brand/5 rounded-xl border border-brand/10 text-brand relative z-10">
+									{category.category}
+								</h2>
+								<div class="h-px flex-1 bg-gradient-to-r from-brand/20 to-transparent"></div>
+							</div>
+
+							<div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+								{category.items.map((item) => (
+									<div class="group relative p-8 rounded-3xl border border-muted/50 bg-white/50 dark:bg-white/5 backdrop-blur-sm hover:border-brand/40 transition-all duration-500 hover:shadow-2xl hover:shadow-brand/5 overflow-hidden flex flex-col justify-center">
+										<!-- Hover Gradient Decor -->
+										<div class={`absolute inset-0 bg-gradient-to-br ${item.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-700 -z-10`}></div>
+										
+										<div class="relative z-10 space-y-4">
+											<div class="space-y-2">
+												<h3 class="text-2xl font-bold group-hover:text-brand transition-colors tracking-tight">
+													{item.name}
+												</h3>
+												<p class="text-muted-foreground leading-relaxed font-normal">
+													{item.description}
+												</p>
+											</div>
+										</div>
+									</div>
+								))}
+							</div>
+						</section>
+					))}
+				</div>
+			</div>
+		</main>
+		<Footer />
+	</body>
+</html>

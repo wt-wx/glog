@@ -1,0 +1,113 @@
+[
+    {
+        "category": "Operating Systems",
+        "items": [
+            {
+                "name": "Windows 11 & Server 2019",
+                "url": "https://www.microsoft.com/windows",
+                "description": "Hybrid NT environment for workstation tasks and enterprise-grade local services.",
+                "icon": "https://www.microsoft.com/favicon.ico",
+                "gradient": "from-blue-600/20 to-sky-500/20"
+            },
+            {
+                "name": "Debian 13 (Hyper-V)",
+                "description": "The universal operating system, running as highly-efficient native Linux guests.",
+                "url": "https://www.debian.org",
+                "icon": "https://www.debian.org/logos/openlogo-nd.svg",
+                "gradient": "from-red-600/20 to-rose-500/20"
+            }
+        ]
+    },
+    {
+        "category": "Development Stack",
+        "items": [
+            {
+                "name": "FastAPI",
+                "url": "https://fastapi.tiangolo.com",
+                "description": "High-performance API development with modern Python features.",
+                "icon": "https://fastapi.tiangolo.com/img/favicon.png",
+                "gradient": "from-emerald-500/20 to-teal-500/20"
+            },
+            {
+                "name": "Golang",
+                "url": "https://go.dev",
+                "description": "Building scalable, efficient, and reliable backend systems.",
+                "icon": "https://go.dev/blog/go-brand/Go-Logo/PNG/Go-Logo_Blue.png",
+                "gradient": "from-cyan-500/20 to-blue-500/20"
+            },
+            {
+                "name": "Bun",
+                "url": "https://bun.com",
+                "description": "The bleeding edge of TypeScript development experience.",
+                "icon": "https://bun.com/favicon.ico",
+                "gradient": "from-pink-500/20 to-orange-500/20"
+            },
+            {
+                "name": "Elysia",
+                "url": "https://elysiajs.com/",
+                "description": "The bleeding edge of TypeScript development experience.",
+                "icon": "https://elysiajs.com/assets/elysia.svg",
+                "gradient": "from-pink-500/20 to-orange-500/20"
+            },
+            {
+                "name": "Drizzle",
+                "url": "https://drizzle.team",
+                "description": "The bleeding edge of TypeScript development experience.",
+                "icon": "https://orm.drizzle.team/favicon.ico",
+                "gradient": "from-pink-500/20 to-orange-500/20"
+            },
+            {
+                "name": "PostgreSQL",
+                "url": "https://www.postgresql.org",
+                "description": "The world's most advanced open source relational database.",
+                "icon": "https://www.postgresql.org/favicon.ico",
+                "gradient": "from-indigo-600/20 to-blue-600/20"
+            }
+        ]
+    },
+    {
+        "category": "Apps & Communication",
+        "items": [
+            {
+                "name": "Brave & Chrome",
+                "url": "https://brave.com",
+                "description": "Privacy-focused browsing vs industry standard web testing.",
+                "icon": "https://brave.com/static-assets/images/brave-favicon.png",
+                "gradient": "from-orange-600/20 to-red-600/20"
+            },
+            {
+                "name": "Thunderbird",
+                "url": "https://www.thunderbird.net/en-US/",
+                "description": "Making email easier. Open source, privacy-first email client.",
+                "icon": "https://www.thunderbird.net/favicon.ico",
+                "gradient": "from-blue-500/20 to-sky-400/20"
+            },
+            {
+                "name": "Lark & 飞书",
+                "url": "https://www.larksuite.com",
+                "description": "The next-gen collaborative suite for modern teams.",
+                "icon": "https://www.larksuite.com/favicon.ico",
+                "gradient": "from-cyan-400/20 to-blue-400/20"
+            }
+        ]
+    },
+    {
+        "category": "IDEs",
+        "items": [
+            {
+                "name": "Antigravity",
+                "url": "https://antigravity.google",
+                "description": "Next-gen AI coding assistant, fine-tuned for high-velocity development.",
+                "icon": "https://antigravity.google/favicon.ico",
+                "gradient": "from-blue-600/20 to-sky-600/20"
+            },
+            {
+                "name": "Android Studio",
+                "url": "https://developer.android.com/studio",
+                "description": "The official IDE for Android application development.",
+                "icon": "https://developer.android.com/static/studio/images/android-studio-stable.svg",
+                "gradient": "from-green-500/20 to-blue-500/20"
+            }
+        ]
+    }
+]
