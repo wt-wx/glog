@@ -41,18 +41,31 @@ const description = "The hardware and equipment I use for my daily workflow.";
 								<div class="h-px flex-1 bg-gradient-to-r from-brand/20 to-transparent"></div>
 							</div>
 
-							<div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+							<div class="grid md:grid-cols-2 gap-8">
 								{category.items.map((item) => (
-									<div class="group relative p-8 rounded-3xl border border-muted/50 bg-white/50 dark:bg-white/5 backdrop-blur-sm hover:border-brand/40 transition-all duration-500 hover:shadow-2xl hover:shadow-brand/5 overflow-hidden flex flex-col justify-center">
+									<div class="group relative p-10 rounded-3xl border border-muted/50 bg-white/50 dark:bg-white/5 backdrop-blur-sm hover:border-brand/40 transition-all duration-500 hover:shadow-2xl hover:shadow-brand/5 overflow-hidden flex flex-col justify-center min-h-[160px]">
 										<!-- Hover Gradient Decor -->
 										<div class={`absolute inset-0 bg-gradient-to-br ${item.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-700 -z-10`}></div>
 										
-										<div class="relative z-10 space-y-4">
-											<div class="space-y-2">
-												<h3 class="text-2xl font-bold group-hover:text-brand transition-colors tracking-tight">
-													{item.name}
-												</h3>
-												<p class="text-muted-foreground leading-relaxed font-normal">
+										<div class="relative z-10 flex items-start gap-8">
+											{item.icon && (
+												<div class="w-20 h-20 rounded-2xl bg-white dark:bg-zinc-900 p-4 shadow-xl border border-muted/20 group-hover:scale-110 transition-transform duration-500 shrink-0 overflow-hidden flex items-center justify-center">
+													<img src={item.icon} alt="" class="w-full h-full object-contain" />
+												</div>
+											)}
+											<div class="space-y-3 min-w-0 flex-1">
+												{item.url ? (
+													<a href={item.url} target="_blank" rel="noopener noreferrer" class="block group/link">
+														<h3 class="text-3xl font-bold group-hover/link:text-brand transition-colors tracking-tight">
+															{item.name} <span class="text-sm opacity-0 group-hover/link:opacity-50 transition-opacity ml-1">↗</span>
+														</h3>
+													</a>
+												) : (
+													<h3 class="text-3xl font-bold tracking-tight">
+														{item.name}
+													</h3>
+												)}
+												<p class="text-lg text-muted-foreground leading-relaxed font-normal">
 													{item.description}
 												</p>
 											</div>

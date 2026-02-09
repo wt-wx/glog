@@ -3,13 +3,16 @@
         "category": "Network Topology",
         "items": [
             {
-                "name": "ZyXEL EX5700 (Telenor)",
-                "description": "主路由运行 OpenWrt (11.1.1.1)，汇聚 3 条光猫桥接链路，构建高可用核心出口。",
+                "name": "ZyXEL EX5700",
+                "url": "https://www.zyxel.com/us/en-us",
+                "icon": "https://www.zyxel.com/themes/custom/zyxel/logo.png",
+                "description": "Main router running OpenWrt, leveraging MWAN3 for multi-link fiber bridge aggregation.",
                 "gradient": "from-teal-600/20 to-cyan-600/20"
             },
             {
                 "name": "Network Structure",
-                "description": "办公内网 (19.2.1.1)、娱乐内网 (19.2.2.1)。",
+                "icon": "https://www.svgrepo.com/show/366477/system-network.svg",
+                "description": "Separated subnets for Office (19.2.1.1) and Entertainment (19.2.2.1).",
                 "gradient": "from-blue-600/20 to-indigo-600/20"
             }
         ]
@@ -18,13 +21,17 @@
         "category": "Mobile",
         "items": [
             {
-                "name": "OnePlus 11 & Moto edge 60",
-                "description": "日常主力（OnePlus 11 + nameless 类原生 OS）与极致性能双持。",
+                "name": "OnePlus",
+                "url": "https://www.oneplus.com/11",
+                "icon": "https://www.oppo.com/favicon.ico",
+                "description": "Primary daily driver, running nameless AOSP-based OS for a clean experience.",
                 "gradient": "from-red-500/20 to-rose-500/20"
             },
             {
-                "name": "Moto X40",
-                "description": "全量数据中心，核心业务与隐私数据存储节点。",
+                "name": "Moto",
+                "url": "https://www.motorola.com.cn/x40",
+                "icon": "https://shop.lenovo.com.cn/favicon.ico",
+                "description": "Full data center, serving as the core node for business and private data storage.",
                 "gradient": "from-blue-500/20 to-cyan-500/20"
             }
         ]
@@ -33,13 +40,17 @@
         "category": "Computing",
         "items": [
             {
-                "name": "Lenovo ThinkBook 14+",
-                "description": "办公、娱乐、轻量开发，极速响应的便携工作站。",
+                "name": "ThinkBook",
+                "url": "https://www.lenovo.com",
+                "icon": "https://www.lenovo.com/favicon.ico",
+                "description": "High-performance portable workstation for office tasks, entertainment, and lightweight coding.",
                 "gradient": "from-zinc-500/20 to-slate-500/20"
             },
             {
-                "name": "Ryzen Nodes",
-                "description": "主力全能 (5600X)、全职开发 (3700X)、直播平台 (1600X)。",
+                "name": "AMD Ryzen",
+                "url": "https://www.amd.com/en.html",
+                "icon": "https://www.amd.com/content/dam/code/images/header/amd-header-logo.svg",
+                "description": "Dedicated nodes for video editing, full-time development, and streaming platforms.",
                 "gradient": "from-orange-600/20 to-red-600/20"
             }
         ]
@@ -48,9 +59,10 @@
         "category": "Storage",
         "items": [
             {
-                "name": "飞牛NAS * 2",
-                "description": "Dual FNOS nodes (11.1.1.11 / 11.1.1.22) for automated backups and data redundancy.",
-                "icon": "https://www.fnos.com/favicon.ico",
+                "name": "FN NAS",
+                "url": "https://www.fnnas.com/",
+                "description": "Dual FNNAS nodes for automated backups and robust data redundancy.",
+                "icon": "https://www.fnnas.com/favicon.ico",
                 "gradient": "from-blue-600/20 to-blue-400/20"
             }
         ]
@@ -60,12 +72,16 @@
         "items": [
             {
                 "name": "Tab 60",
-                "description": "Compact mechanical keyboard for precise and efficient typing.",
+                "url": "https://vortexgear.store/products/tab-60",
+                "icon": "https://vortexgear.store/cdn/shop/files/Shopify_1__1_53eff4cd-7b59-41e7-b170-f05d7acb71da.png",
+                "description": "Compact mechanical keyboard designed for precise and efficient typing.",
                 "gradient": "from-orange-500/20 to-yellow-500/20"
             },
             {
-                "name": "HomePod mini",
-                "description": "Consistent audio landscape and smart home hub.",
+                "name": "Swan惠威",
+                "url": "https://www.hivi.com/",
+                "icon": "https://res.hivi.com/images/index-logo.svg",
+                "description": "Consistent audio landscape and integrated smart home hub.",
                 "gradient": "from-white/20 to-gray-200/20"
             }
         ]

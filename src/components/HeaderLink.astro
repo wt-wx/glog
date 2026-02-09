@@ -11,11 +11,12 @@ const isActive = href === pathname || href === '/' + (subpath?.[0] || '');
 
 <a href={href} class:list={[
 	className, 
-	"relative py-2 transition-all hover:text-brand",
+	"relative py-2 transition-all hover:text-brand group",
 	isActive ? "text-brand font-bold" : "text-muted-foreground"
 ]} {...props}>
 	<slot />
-	{isActive && (
-		<span class="absolute -bottom-1 left-0 w-full h-0.5 bg-brand origin-left transition-transform duration-300"></span>
-	)}
+	<span class:list={[
+		"absolute -bottom-1 left-0 h-0.5 bg-brand transition-all duration-300",
+		isActive ? "w-full" : "w-0 group-hover:w-full"
+	]}></span>
 </a>
