@@ -3,6 +3,7 @@ title: '开源与商业的悖论：网腾无限PMS项目的模式探索'
 description: '针对客户追求源码部署的现状，反思PMS/IoT项目的定位，探讨如何借鉴GitLab、Elastic等成熟模型重构商业化路径。'
 pubDate: '2026-01-06'
 tags: ['商业模式', 'SaaS', '开源', 'IoT', '授权机制']
+author: "尹霈泽"
 ---
 
 在网腾无限PMS（Property Management System）项目的推广过程中，我们遇到了一个极具代表性的矛盾：客户对产品的兴趣极高，但咨询“源码部署”的频率远超SaaS订阅。

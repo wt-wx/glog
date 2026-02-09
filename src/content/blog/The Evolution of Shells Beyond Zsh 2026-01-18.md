@@ -3,6 +3,7 @@ title: '壳层进化：除了 Zsh，我们还有哪些 Shell 选择？'
 description: '探讨现代命令行环境的演进，对比 Bash、Fish、Nushell 及 PowerShell 等 Shell 的特性与适用场景。'
 pubDate: '2026-01-18'
 tags: ['命令行', 'Shell', 'Zsh', '效率工具', '终端']
+author: "尹霈泽"
 ---
 
 在程序员的世界里，终端（Terminal）是通往计算机灵魂的窗户，而 Shell 则是这扇窗户的操作系统。长期以来，Zsh 凭借其强大的插件生态（如 Oh My Zsh）坐稳了 macOS 和许多开发者的默认配置。

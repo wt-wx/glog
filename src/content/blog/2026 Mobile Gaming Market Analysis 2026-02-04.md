@@ -4,6 +4,7 @@ description: '深度解析 2026 年移动游戏市场三大底层逻辑：ROI �
 pubDate: '2026-02-04'
 tags: ['移动游戏', '商业逻辑', '流量套利', '独立游戏', 'AI游戏']
 heroImage: '../../assets/blog-placeholder-4.jpg'
+author: "尹霈泽"
 ---
 
 ### 1. 导语：被“算法”选中的游戏世界

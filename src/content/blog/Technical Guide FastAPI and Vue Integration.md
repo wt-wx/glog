@@ -3,6 +3,7 @@ title: '工程实践：FastAPI 与 Vue 联调阶段的深度清单'
 description: '针对物联网项目的开发周期，梳理跨域配置、API 自动化文档、状态管理与错误标准化处理等关键联调环节。'
 pubDate: '2026-01-06'
 tags: ['FastAPI', 'Vue', '联调测试', '全栈开发', 'IoT项目']
+author: "尹霈泽"
 ---
 
 在完成基于 FastAPI + PostgreSQL 的后端架构与基于 Vue + Element Plus 的前端 UI 后，项目进入了最考验耐心与严谨度的阶段——**系统联调（System Integration）**。
