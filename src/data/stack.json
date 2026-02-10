@@ -22,10 +22,10 @@
         "category": "Development Stack",
         "items": [
             {
-                "name": "FastAPI",
-                "url": "https://fastapi.tiangolo.com",
+                "name": "Python",
+                "url": "https://www.python.org",
                 "description": "High-performance API development with modern Python features.",
-                "icon": "https://fastapi.tiangolo.com/img/favicon.png",
+                "icon": "https://www.python.org/static/img/python-logo.png",
                 "gradient": "from-emerald-500/20 to-teal-500/20"
             },
             {
@@ -43,6 +43,27 @@
                 "gradient": "from-pink-500/20 to-orange-500/20"
             },
             {
+                "name": "PostgreSQL",
+                "url": "https://www.postgresql.org",
+                "description": "The world's most advanced open source relational database.",
+                "icon": "https://www.postgresql.org/favicon.ico",
+                "gradient": "from-indigo-600/20 to-blue-600/20"
+            },
+            {
+                "name": "Godot",
+                "url": "https://godotengine.org",
+                "description": "The world's most advanced open source game engine.",
+                "icon": "https://godotengine.org/assets/img/logo.svg",
+                "gradient": "from-indigo-600/20 to-blue-600/20"
+            },
+            {
+                "name": "OpenResty",
+                "url": "https://openresty.org",
+                "description": "The world's most advanced open source web platform based on Nginx.",
+                "icon": "https://openresty.org/img/logo.png",
+                "gradient": "from-indigo-600/20 to-blue-600/20"
+            },
+            {
                 "name": "Elysia",
                 "url": "https://elysiajs.com/",
                 "description": "The bleeding edge of TypeScript development experience.",
@@ -55,13 +76,6 @@
                 "description": "The bleeding edge of TypeScript development experience.",
                 "icon": "https://orm.drizzle.team/favicon.ico",
                 "gradient": "from-pink-500/20 to-orange-500/20"
-            },
-            {
-                "name": "PostgreSQL",
-                "url": "https://www.postgresql.org",
-                "description": "The world's most advanced open source relational database.",
-                "icon": "https://www.postgresql.org/favicon.ico",
-                "gradient": "from-indigo-600/20 to-blue-600/20"
             }
         ]
     },
@@ -73,6 +87,20 @@
                 "url": "https://brave.com",
                 "description": "Privacy-focused browsing vs industry standard web testing.",
                 "icon": "https://brave.com/static-assets/images/brave-favicon.png",
+                "gradient": "from-orange-600/20 to-red-600/20"
+            },
+            {
+                "name": "Powershell",
+                "url": "https://learn.microsoft.com/en-us/powershell/",
+                "description": "Windows built-in command-line shell and scripting language.",
+                "icon": "https://learn.microsoft.com/en-us/powershell/media/index/powershell-icon.png",
+                "gradient": "from-orange-600/20 to-red-600/20"
+            },
+            {
+                "name": "Notepad++",
+                "url": "https://notepad-plus-plus.org/",
+                "description": "A free source code editor and Notepad replacement that supports several languages.",
+                "icon": "https://notepad-plus-plus.org/favicon.ico",
                 "gradient": "from-orange-600/20 to-red-600/20"
             },
             {
