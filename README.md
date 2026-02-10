@@ -19,6 +19,17 @@
 
 ## 🏗 功能版本迭代 (Version History)
 
+### v1.7.0 - 国际化全栈增强与内容感知 (i18n & Metadata DX)
+- **Project i18n & Revamp**: 
+  - 完整重构并翻译 `/projects` 页面，对齐国际化叙事逻辑。
+  - 优化项目展示架构，增强跨平台展示的适配性。
+- **Blog UX Enhancement**:
+  - 内容页深度增强：在博文底部集成 Tags 标签云与 Author (Written By) 动态落款。
+  - 优化移动端阅读体验，调整元数据模块的视觉层级与呼吸感。
+- **Content Engine**:
+  - 更新组件 Schema 校验，原生支持 `author` 等多维元数据字段。
+  - 优化 `BlogPost` 布局逻辑，提升内容承载的标准化程度。
+
 ### v1.6.0 - 博客转播客 (AI Hybrid Cloud) [Partially Implemented]
 - **AI Podcast Generator (混合云架构)**:
   - 推出 **Blog-to-Podcast** 自动化管线：利用 AI 将 Markdown 博客一键转为专业播客节目。 ✅ (Implemented in `src/lib/podcast`)
@@ -245,4 +256,4 @@ Glog 采用多云容灾与全球加速架构，确保在任何网络环境下都
 
 ---
 
-沉淀知识，持续成长。 **Glog v1.6.0 Development in Progress.**
+沉淀知识，持续成长。 **Glog v1.7.0 Development in Progress.**
