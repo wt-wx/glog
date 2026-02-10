@@ -19,6 +19,15 @@
 
 ## 🏗 功能版本迭代 (Version History)
 
+### v1.8.0 - 视觉重构与内容权重系统 (Visual Revamp & Content Priority)
+- **Blog List Revamp**: 
+  - 博文列表页全面进化为“图文流”模式，原生支持 `heroImage` 封面图展示。
+  - 优化响应式布局，在移动端与桌面端均提供极致的视觉平衡。
+- **Sticky Post (博文置顶)**:
+  - 引入 `sticky` 权重系统，支持在 Frontmatter 中一键置顶重要内容。
+  - 视觉增强：置顶博文原生配备 **Pinned** 徽章标识。
+  - 排序引擎升级：置顶文章始终优先排列，其次按发布日期回溯。
+
 ### v1.7.0 - 国际化全栈增强与内容感知 (i18n & Metadata DX)
 - **Project i18n & Revamp**: 
   - 完整重构并翻译 `/projects` 页面，对齐国际化叙事逻辑。
@@ -123,7 +132,8 @@ pubDate: '2026-01-18 12:08:00'  # 发布时间 (建议格式: YYYY-MM-DD HH:mm:s
 # updatedDate: '2026-01-18'   # 更新日期 (可选)
 series: '示例系列'             # 系列名称 (可选)
 tags: ['标签1', '标签2']       # 标签数组
-heroImage: '../../assets/blog-placeholder-about.jpg' # 封面图 (支持本地路径或 NAS 链接)
+heroImage: "/path/to/image.jpg"  # 封面图 (支持本地路径或 NAS 链接)
+sticky: true  # 开启置顶
 # 可选：内容保护 (设置后将强制 X Login + 访问案号)
 # password: '2026'
 # 可选：预发布/草稿 (设为 true 则仅在本地开发可见，构建不发布)
@@ -256,4 +266,4 @@ Glog 采用多云容灾与全球加速架构，确保在任何网络环境下都
 
 ---
 
-沉淀知识，持续成长。 **Glog v1.7.0 Development in Progress.**
+沉淀知识，持续成长。 **Glog v1.8.0 Development in Progress.**
