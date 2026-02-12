@@ -6,12 +6,17 @@ import { defineConfig } from 'astro/config';
 
 import tailwindcss from '@tailwindcss/vite';
 
+import vercel from '@astrojs/vercel';
+
 // https://astro.build/config
 export default defineConfig({
   site: 'https://glog.geniux.net',
+  output: 'server',
   integrations: [mdx(), sitemap()],
 
   vite: {
     plugins: [tailwindcss()],
   },
+
+  adapter: vercel(),
 });

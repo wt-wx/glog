@@ -1,0 +1,202 @@
+---
+import BaseHead from '../../components/BaseHead.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import { SITE_TITLE } from '../../consts';
+import { supabaseAdmin } from '../../lib/supabase';
+import { getTodayCalendarEvents, getPendingTasks } from '../../lib/google';
+
+// 不预渲染，因为是动态管理面板
+export const prerender = false;
+
+// 获取 Google 授权状态
+const { data: authState } = await supabaseAdmin
+  .from('assistant_state')
+  .select('*')
+  .eq('id', 'google_auth')
+  .maybeSingle();
+
+const isGoogleConnected = !!authState && !authState.data?.test;
+const lastSync = authState?.data?.updated_at ? new Date(authState.data.updated_at).toLocaleString('zh-CN') : '从未同步';
+
+// 获取日程和任务 (仅在已连接时)
+let events = [];
+let tasks = [];
+let error = null;
+
+if (isGoogleConnected) {
+  try {
+    [events, tasks] = await Promise.all([
+      getTodayCalendarEvents(),
+      getPendingTasks()
+    ]);
+  } catch (e) {
+    console.error('Data fetch error:', e);
+    error = e.message;
+  }
+}
+
+// 获取项目统计
+const { count: projectCount } = await supabaseAdmin
+  .from('projects_extended')
+  .select('*', { count: 'exact', head: true });
+
+// 获取资产统计
+const { count: assetCount } = await supabaseAdmin
+  .from('it_assets')
+  .select('*', { count: 'exact', head: true });
+---
+
+<html lang="zh-CN">
+	<head>
+		<BaseHead title={`Command Center | ${SITE_TITLE}`} description="Genius OS 控制中心" />
+	</head>
+	<body class="bg-background text-foreground antialiased transition-colors duration-300">
+		<Header />
+		<main class="max-w-7xl mx-auto px-6 py-20">
+			<header class="mb-16">
+				<h1 class="text-5xl font-black mb-4 tracking-tight">Genius <span class="text-brand">OS</span></h1>
+				<p class="text-xl text-muted-foreground">云端大脑控制中心</p>
+			</header>
+
+			<div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+				<!-- Google Integration Status -->
+				<div class="p-8 rounded-3xl border border-muted bg-white/5 dark:bg-white/5 backdrop-blur-sm">
+					<div class="flex items-center justify-between mb-6">
+						<h3 class="text-xl font-bold">Google 集成</h3>
+						<div class={`w-3 h-3 rounded-full ${isGoogleConnected ? 'bg-green-500 shadow-[0_0_10px_rgba(34,197,94,0.5)]' : 'bg-red-500'}`}></div>
+					</div>
+					<div class="space-y-4">
+						<div class="flex justify-between text-sm">
+							<span class="text-muted-foreground">状态</span>
+							<span class="font-mono">{isGoogleConnected ? '已连接' : '未连接'}</span>
+						</div>
+						<div class="flex justify-between text-sm">
+							<span class="text-muted-foreground">最后心跳</span>
+							<span class="font-mono">{lastSync}</span>
+						</div>
+						<div class="pt-4">
+							<a 
+								href="/api/auth/google/login" 
+								class={`block text-center py-3 rounded-xl font-bold transition-all ${isGoogleConnected ? 'bg-muted text-muted-foreground hover:bg-brand hover:text-white' : 'bg-brand text-white shadow-lg shadow-brand/20 hover:scale-105'}`}
+							>
+								{isGoogleConnected ? '重新连接 Google' : '立即连接 Google'}
+							</a>
+						</div>
+                        {error && <p class="text-[10px] text-red-500 mt-2">错误: {error}</p>}
+					</div>
+				</div>
+
+				<!-- Project Progress -->
+				<div class="p-8 rounded-3xl border border-muted bg-white/5 dark:bg-white/5 backdrop-blur-sm">
+					<h3 class="text-xl font-bold mb-6">项目进程</h3>
+					<div class="space-y-4">
+						<div class="flex justify-between text-sm">
+							<span class="text-muted-foreground">活跃项目</span>
+							<span class="font-mono text-2xl font-black">{projectCount || 0}</span>
+						</div>
+						<div class="pt-4">
+							<a href="/projects" class="text-sm font-bold text-brand hover:underline">查看全量路线图 →</a>
+						</div>
+					</div>
+				</div>
+
+				<!-- IT Assets -->
+				<div class="p-8 rounded-3xl border border-muted bg-white/5 dark:bg-white/5 backdrop-blur-sm">
+					<h3 class="text-xl font-bold mb-6">IT 资产</h3>
+					<div class="space-y-4">
+						<div class="flex justify-between text-sm">
+							<span class="text-muted-foreground">管控资源</span>
+							<span class="font-mono text-2xl font-black">{assetCount || 0}</span>
+						</div>
+						<div class="pt-4 text-xs text-muted-foreground italic">
+							正在接入 Dokploy 监控...
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<section class="mt-20">
+				<div class="flex items-center justify-between mb-8">
+                    <h2 class="text-2xl font-bold">今日大脑简报</h2>
+                    <button 
+                        id="push-tg-btn"
+                        class="px-4 py-2 rounded-full bg-brand/10 text-brand text-xs font-bold hover:bg-brand hover:text-white transition-all flex items-center gap-2"
+                        disabled={!isGoogleConnected}
+                    >
+                        <span>✈️</span> 推送到 Telegram
+                    </button>
+                </div>
+                
+				<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+
+                    <!-- Calendar Section -->
+					<div class="space-y-4">
+                        <div class="flex items-center gap-2 mb-4">
+                            <span class="text-xl">📅</span>
+                            <h3 class="font-bold">今日日程</h3>
+                        </div>
+                        <div class="space-y-3">
+                            {events.length > 0 ? events.map(event => (
+                                <div class="p-4 rounded-2xl bg-muted/20 border border-muted/50 flex justify-between items-center group hover:bg-muted/30 transition-all">
+                                    <div class="font-medium">{event.summary}</div>
+                                    <div class="text-xs text-muted-foreground font-mono">
+                                        {event.start?.dateTime ? new Date(event.start.dateTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '全天'}
+                                    </div>
+                                </div>
+                            )) : (
+                                <div class="text-muted-foreground italic text-sm p-4">今天没有安排，享受自由的一天！</div>
+                            )}
+                        </div>
+                    </div>
+
+                    <!-- Tasks Section -->
+                    <div class="space-y-4">
+                        <div class="flex items-center gap-2 mb-4">
+                            <span class="text-xl">✅</span>
+                            <h3 class="font-bold">待办事项</h3>
+                        </div>
+                        <div class="space-y-3">
+                            {tasks.length > 0 ? tasks.map(task => (
+                                <div class="p-4 rounded-2xl bg-muted/20 border border-muted/50 group hover:bg-brand/5 hover:border-brand/20 transition-all">
+                                    <div class="font-medium mb-1">{task.title}</div>
+                                    {task.notes && <div class="text-xs text-muted-foreground line-clamp-1">{task.notes}</div>}
+                                </div>
+                            )) : (
+                                <div class="text-muted-foreground italic text-sm p-4">清单已清空，您太高效了！</div>
+                            )}
+                        </div>
+                    </div>
+				</div>
+			</section>
+		</main>
+            <script>
+                document.getElementById('push-tg-btn')?.addEventListener('click', async (e) => {
+                    const btn = e.currentTarget as HTMLButtonElement;
+                    const originalText = btn.innerHTML;
+                    
+                    btn.disabled = true;
+                    btn.innerHTML = '<span>⏳</span> 正在推送...';
+                    
+                    try {
+                        const res = await fetch('/api/assistant/push-briefing', { method: 'POST' });
+                        const data = await res.json();
+                        if (data.success) {
+                            btn.innerHTML = '<span>✅</span> 已发送到手机';
+                            setTimeout(() => { 
+                                btn.innerHTML = originalText; 
+                                btn.disabled = false; 
+                            }, 3000);
+                        } else {
+                            throw new Error(data.error);
+                        }
+                    } catch (err: any) {
+                        alert('推送失败: ' + err.message);
+                        btn.innerHTML = originalText;
+                        btn.disabled = false;
+                    }
+                });
+            </script>
+		<Footer />
+	</body>
+</html>

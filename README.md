@@ -19,6 +19,19 @@
 
 ## 🏗 功能版本迭代 (Version History)
 
+### v2.0.0 - Genius OS: 个人云端大脑进化 (Cloud Brain Evolution)
+- **Google Assistant Ecosystem (Phase 1)**:
+  - **Unified OAuth**: 深度集成 Google OAuth 2.0，获得 Calendar (日程) 与 Tasks (待办) 的原生读写权限。
+  - **Token Management**: 基于 Supabase 实现加密 Token 的持久化存储与全自动刷新机制。
+  - **Admin Command Center**: 全新的管理后台 (`/admin/dashboard`)，实时监控同步状态与系统心跳。
+- **Telegram Connectivity (Phase 2)**:
+  - **Daily Briefing**: 自动化简报引擎，每天准时通过 Telegram 推送今日日程与待办清单。
+  - **Interactive Bot**: 部署 Telegram Webhook 架构，支持通过 `/today`、`/tasks` 等指令实时调取大脑数据。
+  - **Hybrid Notification**: 结合 Google API 与 Telegram Bot API，构建“大脑 -> 手机”的即时触达链路。
+- **Cognitive Core (Phase 3) [Planned]**:
+  - **AI Agent Integration**: 预集成 Gemini 1.5 Pro / Claude 3.5 认知核心，实现自然语言意图识别。
+  - **Semantic Ideas**: 引入语义备忘录，通过 Telegram 随手记录的想法将由 AI 自动打标、分类并存入 Supabase 灵感库。
+
 ### v1.8.0 - 视觉重构与内容权重系统 (Visual Revamp & Content Priority)
 - **Blog List Revamp**: 
   - 博文列表页全面进化为“图文流”模式，原生支持 `heroImage` 封面图展示。

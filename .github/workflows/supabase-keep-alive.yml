@@ -17,7 +17,13 @@ jobs:
         run: bun install
         
       - name: Run keep-alive script
-        run: bun run supabase-keep-alive
+        run: bun scripts/supabase-keep-alive.mjs
         env:
-          PUBLIC_SUPABASE_URL: ${{ secrets.PUBLIC_SUPABASE_URL }}
-          PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.PUBLIC_SUPABASE_ANON_KEY }}
+          # Project 1 (Glog / Default)
+          SUPABASE_URL: ${{ secrets.PUBLIC_SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.PUBLIC_SUPABASE_ANON_KEY }}
+          # Project 2 (Optional - configure in GitHub Secrets)
+          OTHER_SUPABASE_URL: ${{ secrets.OTHER_SUPABASE_URL }}
+          OTHER_SUPABASE_ANON_KEY: ${{ secrets.OTHER_SUPABASE_ANON_KEY }}
+          # Advanced: Support for ANY number of projects via a single JSON secret
+          SUPABASE_PROJECTS_JSON: ${{ secrets.SUPABASE_PROJECTS_JSON }}

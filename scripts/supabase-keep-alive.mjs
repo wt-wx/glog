@@ -1,40 +1,105 @@
 import { createClient } from '@supabase/supabase-js';
 import dotenv from 'dotenv';
 
+// Load .env for local development
 dotenv.config();
 
-const supabaseUrl = process.env.PUBLIC_SUPABASE_URL;
-const supabaseAnonKey = process.env.PUBLIC_SUPABASE_ANON_KEY;
+/**
+ * CONFIGURATION:
+ * To manage multiple projects, you can:
+ * 1. Set individual keys: SUPABASE_URL_1, SUPABASE_ANON_KEY_1, etc.
+ * 2. Or pass a JSON string in SUPABASE_PROJECTS_JSON:
+ *    '[{"url": "...", "key": "..."}, {"url": "...", "key": "..."}]'
+ */
 
-if (!supabaseUrl || !supabaseAnonKey) {
-    console.error('Missing Supabase environment variables.');
-    process.exit(1);
-}
+async function keepAlive(url, key, projectName = 'Unknown') {
+    const trimmedUrl = url?.trim();
+    const trimmedKey = key?.trim();
 
-const supabase = createClient(supabaseUrl, supabaseAnonKey);
+    if (!trimmedUrl || !trimmedKey) {
+        console.error(`❌ [${projectName}] Error: Missing Supabase configuration.`);
+        return false;
+    }
 
-async function keepAlive() {
-    console.log('Sending keep-alive pulse to Supabase at:', new Date().toISOString());
+    console.log(`\n--- Pulse: ${projectName} ---`);
+    console.log(`Target: ${trimmedUrl}`);
 
     try {
-        // We perform a simple query to ensure the database stays active.
-        // Even if the table doesn't exist, the attempt counts as activity.
-        // Better: Query the auth health or a generic table.
-        const { data, error } = await supabase
+        const supabase = createClient(trimmedUrl, trimmedKey);
+        const { error } = await supabase
             .from('_keep_alive')
             .select('*')
             .limit(1);
 
         if (error && error.code !== 'PGRST116' && error.code !== '42P01') {
-            // PGRST116 is "no rows", 42P01 is "table does not exist"
-            // Both are fine as they mean the DB is alive and responding.
-            console.error('Supabase responded with an unexpected error:', error.message);
+            console.error(`❌ [${projectName}] Unexpected error:`, error.message);
+            return false;
         } else {
-            console.log('Pulse successful: Supabase is awake.');
+            console.log(`✅ [${projectName}] Pulse successful: Supabase is awake.`);
+            return true;
         }
     } catch (e) {
-        console.error('Failed to connect to Supabase:', e.message);
+        console.error(`❌ [${projectName}] Connection failed:`, e.message);
+        return false;
     }
 }
 
-keepAlive();
+async function runAll() {
+    const projects = [];
+
+    // 1. Try to load from JSON environment variable (Most scalable for many projects)
+    if (process.env.SUPABASE_PROJECTS_JSON) {
+        try {
+            const jsonProjects = JSON.parse(process.env.SUPABASE_PROJECTS_JSON);
+            projects.push(...jsonProjects.map((p, i) => ({
+                url: p.url,
+                key: p.key,
+                name: p.name || `Project (JSON #${i + 1})`
+            })));
+        } catch (e) {
+            console.error('❌ Failed to parse SUPABASE_PROJECTS_JSON:', e.message);
+        }
+    }
+
+    // 2. Load from individual environment variables (Traditional way)
+    // Project 1 (Glog)
+    if (process.env.PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL) {
+        projects.push({
+            url: process.env.PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL,
+            key: process.env.PUBLIC_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY,
+            name: 'Glog / Official'
+        });
+    }
+
+    // Project 2 (Wuxian/Other)
+    if (process.env.OTHER_SUPABASE_URL) {
+        projects.push({
+            url: process.env.OTHER_SUPABASE_URL,
+            key: process.env.OTHER_SUPABASE_ANON_KEY,
+            name: 'Secondary Project'
+        });
+    }
+
+    // Deduplicate and filter empty
+    const uniqueProjects = projects.filter((p, index, self) =>
+        p.url && p.key && index === self.findIndex((t) => t.url === p.url)
+    );
+
+    if (uniqueProjects.length === 0) {
+        console.error('❌ No projects found to keep alive.');
+        console.log('Environment keys found:', Object.keys(process.env).filter(k => k.includes('SUPABASE')));
+        process.exit(1);
+    }
+
+    console.log(`🚀 Starting keep-alive for ${uniqueProjects.length} projects...`);
+
+    let successCount = 0;
+    for (const project of uniqueProjects) {
+        const success = await keepAlive(project.url, project.key, project.name);
+        if (success) successCount++;
+    }
+
+    console.log(`\nSummary: ${successCount}/${uniqueProjects.length} pulses successful.`);
+}
+
+runAll();
