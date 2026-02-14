@@ -6,15 +6,15 @@ const today = new Date();
 <footer class="py-12 mt-20 border-t border-muted">
 	<div class="max-w-4xl mx-auto px-6">
 		{/* Top Row: Site Links (Left) & Social Links (Right) */}
-		<div class="flex flex-col md:flex-row items-center justify-between gap-6 mb-8">
-			<div class="flex flex-wrap gap-2 font-medium text-sm">
-				<a href="/bookmarks" class="px-4 py-2 rounded-full text-foreground hover:bg-brand/10 hover:text-brand transition-all">Bookmarks</a>
-				<a href="/gear" class="px-4 py-2 rounded-full text-foreground hover:bg-brand/10 hover:text-brand transition-all">Gear</a>
-				<a href="/stack" class="px-4 py-2 rounded-full text-foreground hover:bg-brand/10 hover:text-brand transition-all">Stack</a>
-				<a href="/tags" class="px-4 py-2 rounded-full text-foreground hover:bg-brand/10 hover:text-brand transition-all">Tags</a>
-				<a href="/xlog" class="px-4 py-2 rounded-full text-foreground hover:bg-brand/10 hover:text-brand transition-all">X-log</a>
-			</div>
-			<div class="flex flex-wrap items-center gap-x-6 gap-y-2">
+		<div class="flex flex-col md:flex-row items-center justify-between gap-8 mb-12 text-center md:text-left">
+			<nav class="flex flex-wrap justify-center md:justify-start gap-2">
+				<a href="/bookmarks" class="px-3 py-1.5 rounded-full text-foreground hover:bg-brand/10 hover:text-brand transition-all text-sm font-medium">Bookmarks</a>
+				<a href="/gear" class="px-3 py-1.5 rounded-full text-foreground hover:bg-brand/10 hover:text-brand transition-all text-sm font-medium">Gear</a>
+				<a href="/stack" class="px-3 py-1.5 rounded-full text-foreground hover:bg-brand/10 hover:text-brand transition-all text-sm font-medium">Stack</a>
+				<a href="/tags" class="px-3 py-1.5 rounded-full text-foreground hover:bg-brand/10 hover:text-brand transition-all text-sm font-medium">Tags</a>
+				<a href="/xlog" class="px-3 py-1.5 rounded-full text-foreground hover:bg-brand/10 hover:text-brand transition-all text-sm font-medium">X-log</a>
+			</nav>
+			<div class="flex flex-wrap justify-center md:justify-end items-center gap-x-6 gap-y-2">
 				<a href="https://x.com/geniux" target="_blank" class="text-foreground hover:text-brand transition-colors hover:scale-105 transform duration-300 text-sm font-medium">X/Twitter</a>
 				<a href="https://facebook.com/geniux" target="_blank" class="text-foreground hover:text-brand transition-colors hover:scale-105 transform duration-300 text-sm font-medium">Facebook</a>
 				<a href="https://instagram.com/geniux" target="_blank" class="text-foreground hover:text-brand transition-colors hover:scale-105 transform duration-300 text-sm font-medium">Instagram</a>
@@ -26,25 +26,26 @@ const today = new Date();
 		{/* Divider: Dashed line */}
 		<div class="border-t border-dashed border-muted mb-8"></div>
 
-		{/* Bottom Row: Copyright (Left) & Powered By (Right) */}
+		{/* Bottom Row: Powered By (Left) & Copyright (Right) */}
 		<div class="flex flex-col md:flex-row items-center justify-between gap-6">
-			<p class="text-muted-foreground text-sm">
-				&copy; {today.getFullYear()} Glog. All rights reserved.
-			</p>
-			<div class="flex flex-wrap items-center gap-x-4 gap-y-2 text-[10px] uppercase tracking-widest text-muted-foreground/30 font-bold">
-				<span>Powered by</span>
+			<div class="flex flex-wrap justify-center md:justify-start items-center gap-x-3 gap-y-2 text-[9px] uppercase tracking-[0.2em] text-muted-foreground/30 font-bold">
+				<span class="mr-1">Powered by</span>
 				<a href="https://antigravity.google" target="_blank" class="hover:text-brand transition-colors">Antigravity</a>
-				<span class="opacity-30">|</span></span>
+				<span class="w-1 h-1 rounded-full bg-muted-foreground/20"></span>
 				<a href="https://gemini.google.com" target="_blank" class="hover:text-brand transition-colors">Gemini</a>
-				<span class="opacity-30">|</span></span>
+				<span class="w-1 h-1 rounded-full bg-muted-foreground/20"></span>
 				<a href="https://astro.build" target="_blank" class="hover:text-brand transition-colors">Astro</a>
-				<span class="opacity-30">|</span>
+				<span class="w-1 h-1 rounded-full bg-muted-foreground/20"></span>
 				<a href="https://github.com" target="_blank" class="hover:text-brand transition-colors">GitHub</a>
-				<span class="opacity-30">|</span>
+				<span class="w-1 h-1 rounded-full bg-muted-foreground/20"></span>
 				<a href="https://cloudflare.com" target="_blank" class="hover:text-brand transition-colors">Cloudflare</a>
-				<span class="opacity-30">|</span>
+				<span class="w-1 h-1 rounded-full bg-muted-foreground/20"></span>
 				<a href="https://vercel.com" target="_blank" class="hover:text-brand transition-colors">Vercel</a>
 			</div>
+
+			<p class="text-muted-foreground text-sm font-medium">
+				&copy; {today.getFullYear()} Glog. All rights reserved.
+			</p>
 		</div>
 	</div>
 </footer>
