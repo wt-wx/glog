@@ -1,7 +1,7 @@
 ---
 title: "浏览器选型决策辅助：从“上网工具”到“个人工作台”"
 description: "2026 年浏览器选型指南：在 Vivaldi、Brave 和 DuckDuckGo 之间，找回你的数字主权。"
-pubDate: "2026-02-16 14:00:00"
+pubDate: "2026-02-16"
 tags: ["浏览器", "生产力", "隐私", "工具轮"]
 author: "尹霈泽"
 series: "数字权力与策略"
