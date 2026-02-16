@@ -29,45 +29,23 @@
   - **Interactive Bot**: 部署 Telegram Webhook 架构，支持通过 `/today`、`/tasks` 等指令实时调取大脑数据。
   - **Hybrid Notification**: 结合 Google API 与 Telegram Bot API，构建“大脑 -> 手机”的即时触达链路。
 - **Cognitive Core (Phase 3) [Planned]**:
-  - **AI Agent Integration**: 预集成 Gemini 1.5 Pro / Claude 3.5 认知核心，实现自然语言意图识别。
+  - **AI Agent Integration**: 预集成 Gemini 3.0 Pro / Claude 4.5 认知核心，实现自然语言意图识别。
   - **Semantic Ideas**: 引入语义备忘录，通过 Telegram 随手记录的想法将由 AI 自动打标、分类并存入 Supabase 灵感库。
 
-### v1.9.4 - 线性交互与响应式架构 (Linear UX & Responsive Architecture)
-- **Intro Layout Overhaul**: 重构 `/intro` 页面为单列线性纵向布局，提升移动端与 PC 端的内容聚焦感。
-  - **Fluid Typography**: 引入 `clamp` 流体字号技术，确保 "Hi, I'm Geniux" 核心标题在各分辨率下始终保持单行且不溢出。
-  - **Adaptive Header**: 重新设计头像与标题的并排逻辑，实现大屏横向展开与小屏响应式堆叠的完美平衡。
-  - **Precision Alignment**: 实施“非对称平衡”布局：物理坐标 (Location) 靠右对齐，核心行动按钮 (CTA) 全站居中对齐。
-- **Mobile UX Optimization**: 
-  - **Button Refactor**: 在移动端强制实施横向双按钮展示，通过文案精简与 `flex-1` 动态弹性宽度实现极致紧凑感。
-  - **PC Compactness**: 统一 PC 端按钮最小宽度，保持视觉克制与专业感。
-
-### v1.9.3 - 系统集成与“奔跑者”叙事 (Systems Schematic & Running Man)
-- **Persona Refinement**: 重构 `/intro` 介绍页为专业的英文叙事，确立 **"S'ALL Running Man"** 品牌身份，深耕“万载演化中的奔跑者”哲学内核。
-- **Iconography Evolution**: 同步更新“黑洞 / 事件视界 (Event Horizon)”视觉 Badge，象征从古代信史到未来秩序的极致信息密度。
-- **Projects Schematic Refactor**: 彻底重构 `/projects` 页面为“技术蓝图 (Schematic)”风格网格。
-  - **Modular UI**: 采用极细线条网格与模块化单元格设计，对齐高分辨率工程美学。
-  - **Intelligence Status**: 引入动态“呼吸灯”状态监测（Live Status），实时反馈项目活跃度。
-  - **Interactive Titles**: 将外链集成至项目标题，配合滑入式箭头动效，大幅提升交互直觉性。
-- **Technical Aesthetics**: 全面采用等宽字体元数据与代码风格标签（`// Tag`），强化“元系统架构师”的技术严谨感。
-
-### v1.9.2 - 极致减法与元系统重构 (Minimalist UX & Meta-System Refactor)
-- **Minimalist UX Refactoring**: 实施“极致减法”设计，将原有的 Prev/Next 系列导航块合并至推荐列表，通过高亮标签实现语义引导，大幅降低视觉摩擦。
-- **Deep Intro Refactoring**: 彻底重构 `/intro` 介绍页面，摒弃浅层的标签罗列，转向“元系统架构师”与“文明解码者”的深刻哲学叙事，同步更新“系统核心”视觉 Badge。
-- **Content Saturation**: 自动化导入覆盖浏览器战争、大厂并购与技术历史的 5 篇深度长文。
-- **Remote Image Support**: 建立 Unsplash 远程图源授权体系。
-
-### v1.9.1 - 视觉微调与 UI 修复 (UI Polishing & Bug Fixes)
-- **Gallery UX Fix**: 修复 `/gallery` 页面访问申请按钮在暗色模式下的颜色冲突问题，统一品牌视觉。
-- **UI Consistency**: 统一“相关内容”模块的文章标题展示长度，确保在不同屏幕尺寸下的布局对齐。
-- **Astro Core Update**: 完成 Astro 5.17.2 核心升级，提升构建性能与稳定性。
-
-### v1.9.0 - 语义关联与阅读导航闭环 (Semantic Association & UX Loop)
-- **Related Content Engine**: 
-  - 引入智能关联算法：优先匹配 `series` (系列) 导向的强关联，其次根据 `tags` (标签) 权重实现语义推荐。
-  - 架构升级：在博文底部构建“语义上下文”模块，提升站内内容留存率与 SEO 权重。
-- **Minimalist Navigation (Scheme B+C)**:
-  - 采用强关联导航逻辑：清晰指引系列文章的 Prev/Next 流向，支持跨文章深度阅读。
-  - 极致视觉呈现：采用极简文本流设计，支持 `heroImage` 缩略图自适应展示，兼顾无图博文的排版美感。
+### v1.9.x - 系统叙事与高精视觉重构 (System Narrative & High-Res Visuals)
+- **Identity & Narrative (Persona)**:
+  - **Running Man**: 确立 **"S'ALL Running Man"** 品牌身份，完成介绍页向专业的英文叙事与哲学内核重构。
+  - **Iconography**: 引入“黑洞 / 事件视界 (Event Horizon)”视觉 Badge，象征从古代信史到未来秩序的极致信息密度。
+- **Schematic & High-Res UI**:
+  - **Projects Schematic**: 将项目页重构为“技术蓝图 (Schematic)”网格，引入模块化单元格与动态“呼吸灯”Live Status。
+  - **Linear Intro UX**: 重构介绍页为单列线性纵向布局，结合 `clamp` 流体字号实现全分辨率下的视觉聚焦。
+  - **Responsive Detail**: 实施“非对称平衡”对齐，全站统一按钮组 (CTA) 的居中对齐与移动端横向弹性显示。
+- **Core Engine & Semantic Loop**:
+  - **Integrated Engine**: 引入智能关联算法与博文导航闭环 (Prev/Next)，构建站内 SEO 与阅读体验的“语义上下文”。
+  - **Content Saturation**: 自动化导入覆盖浏览器战争、技术演化等领域的 5 篇深度长文，提升站内内容密度。
+- **Maintenance & Stack Upgrade**:
+  - **Astro Core**: 完成 Astro 5.17.2 核心升级，优化构建性能。
+  - **Environment**: 建立 Unsplash 远程图源授权体系，修复 Gallery 申请按钮在暗色模式下的颜色冲突。
 
 ### v1.8.0 - 视觉重构与内容权重系统 (Visual Revamp & Content Priority)
 - **Blog List Revamp**: 
