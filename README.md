@@ -32,6 +32,15 @@
   - **AI Agent Integration**: 预集成 Gemini 1.5 Pro / Claude 3.5 认知核心，实现自然语言意图识别。
   - **Semantic Ideas**: 引入语义备忘录，通过 Telegram 随手记录的想法将由 AI 自动打标、分类并存入 Supabase 灵感库。
 
+### v1.9.4 - 线性交互与响应式架构 (Linear UX & Responsive Architecture)
+- **Intro Layout Overhaul**: 重构 `/intro` 页面为单列线性纵向布局，提升移动端与 PC 端的内容聚焦感。
+  - **Fluid Typography**: 引入 `clamp` 流体字号技术，确保 "Hi, I'm Geniux" 核心标题在各分辨率下始终保持单行且不溢出。
+  - **Adaptive Header**: 重新设计头像与标题的并排逻辑，实现大屏横向展开与小屏响应式堆叠的完美平衡。
+  - **Precision Alignment**: 实施“非对称平衡”布局：物理坐标 (Location) 靠右对齐，核心行动按钮 (CTA) 全站居中对齐。
+- **Mobile UX Optimization**: 
+  - **Button Refactor**: 在移动端强制实施横向双按钮展示，通过文案精简与 `flex-1` 动态弹性宽度实现极致紧凑感。
+  - **PC Compactness**: 统一 PC 端按钮最小宽度，保持视觉克制与专业感。
+
 ### v1.9.3 - 系统集成与“奔跑者”叙事 (Systems Schematic & Running Man)
 - **Persona Refinement**: 重构 `/intro` 介绍页为专业的英文叙事，确立 **"S'ALL Running Man"** 品牌身份，深耕“万载演化中的奔跑者”哲学内核。
 - **Iconography Evolution**: 同步更新“黑洞 / 事件视界 (Event Horizon)”视觉 Badge，象征从古代信史到未来秩序的极致信息密度。
@@ -307,4 +316,4 @@ Glog 采用多云容灾与全球加速架构，确保在任何网络环境下都
 
 ---
 
-沉淀知识，持续成长。 **Glog v1.9.3 Development in Progress.**
+沉淀知识，持续成长。 **Glog v1.9.4 Development in Progress.**
