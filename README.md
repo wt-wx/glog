@@ -32,20 +32,20 @@
   - **AI Agent Integration**: 预集成 Gemini 3.0 Pro / Claude 4.5 认知核心，实现自然语言意图识别。
   - **Semantic Ideas**: 引入语义备忘录，通过 Telegram 随手记录的想法将由 AI 自动打标、分类并存入 Supabase 灵感库。
 
-### v1.9.x - 系统叙事与高精视觉重构 (System Narrative & High-Res Visuals)
-- **Identity & Narrative (Persona)**:
-  - **Running Man**: 确立 **"S'ALL Running Man"** 品牌身份，完成介绍页向专业的英文叙事与哲学内核重构。
+### v1.9.1 - v1.9.3 - 系统叙事与视觉协议重构 (System Narrative & Visual Protocol)
+- **Identity & Narrative (Intro Update)**:
+  - **Running Man**: 确立 **"S'ALL Running Man"** 品牌身份，完成 `/intro` 向专业的英文叙事与哲学内核重构。
+  - **Linear UX**: 重构 `/intro` 为单列线性纵向布局，结合 `clamp` 流体字号与“非对称平衡”对齐（Location居右，CTA居中）。
   - **Iconography**: 引入“黑洞 / 事件视界 (Event Horizon)”视觉 Badge，象征从古代信史到未来秩序的极致信息密度。
-- **Schematic & High-Res UI**:
-  - **Projects Schematic**: 将项目页重构为“技术蓝图 (Schematic)”网格，引入模块化单元格与动态“呼吸灯”Live Status。
-  - **Linear Intro UX**: 重构介绍页为单列线性纵向布局，结合 `clamp` 流体字号实现全分辨率下的视觉聚焦。
-  - **Responsive Detail**: 实施“非对称平衡”对齐，全站统一按钮组 (CTA) 的居中对齐与移动端横向弹性显示。
-- **Core Engine & Semantic Loop**:
-  - **Integrated Engine**: 引入智能关联算法与博文导航闭环 (Prev/Next)，构建站内 SEO 与阅读体验的“语义上下文”。
-  - **Content Saturation**: 自动化导入覆盖浏览器战争、技术演化等领域的 5 篇深度长文，提升站内内容密度。
-- **Maintenance & Stack Upgrade**:
-  - **Astro Core**: 完成 Astro 5.17.2 核心升级，优化构建性能。
-  - **Environment**: 建立 Unsplash 远程图源授权体系，修复 Gallery 申请按钮在暗色模式下的颜色冲突。
+- **Projects & High-Res UI**:
+  - **Schematic Grid**: 将 `/projects` 页面重构为“技术蓝图 (Schematic)”风格网格，引入模块化单元格与动态“呼吸灯”状态监测。
+  - **Refined Buttons**: 强制实施移动端按钮横向弹性平铺，并统一 PC 端紧凑型按钮规格，实现跨端体验的一致性。
+- **Core Engine & Content**:
+  - **Smart Association**: 引入智能关联算法与博文 Prev/Next 闭环，构建站内 SEO 的“语义上下文”。
+  - **Content Saturation**: 自动化导入 5 篇深度长文（涵盖技术并购、浏览器战争等），显著提升深度内容储备。
+- **Infrastructure**:
+  - **Core Update**: 完成 Astro 5.17.2 官方核心升级。
+  - **Stability**: 建立 Unsplash 远程图源授权体系，修复暗色模式下的 Gallery 交互冲突。
 
 ### v1.8.0 - 视觉重构与内容权重系统 (Visual Revamp & Content Priority)
 - **Blog List Revamp**: 
@@ -294,4 +294,4 @@ Glog 采用多云容灾与全球加速架构，确保在任何网络环境下都
 
 ---
 
-沉淀知识，持续成长。 **Glog v1.9.4 Development in Progress.**
+沉淀知识，持续成长。 **Glog v1.9.3 Development in Progress.**
