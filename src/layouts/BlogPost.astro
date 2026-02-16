@@ -18,8 +18,10 @@ type Props = {
 	seriesPosts?: CollectionEntry<'blog'>[]; // Keep for legacy if needed, but we'll use RelatedPosts
 };
 
-const { post, headings } = Astro.props;
-const { title, description, pubDate, updatedDate, heroImage, tags, author, id } = { ...post.data, id: post.id };
+const { post, headings, ...rest } = Astro.props;
+const data = post ? post.data : rest;
+const { title, description, pubDate, updatedDate, heroImage, tags, author } = data;
+const id = post ? post.id : 'page';
 ---
 
 <html lang="en">
@@ -96,7 +98,7 @@ const { title, description, pubDate, updatedDate, heroImage, tags, author, id } 
 					<PodcastStatus blogPostId={id} showDetails={false} />
 
 					{/* 1.9 Related Content & Series Navigation */}
-					<RelatedPosts post={post} />
+					{post && <RelatedPosts post={post} />}
 
 					<XReplies slug={id} />
 					<Giscus />
