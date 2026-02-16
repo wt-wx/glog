@@ -13,7 +13,9 @@ export default defineConfig({
   site: 'https://glog.geniux.net',
   output: 'server',
   integrations: [mdx(), sitemap()],
-
+  image: {
+    domains: ['images.unsplash.com'],
+  },
   vite: {
     plugins: [tailwindcss()],
   },

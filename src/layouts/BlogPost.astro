@@ -10,13 +10,16 @@ import PodcastStatus from '../components/PodcastStatus.astro';
 import Giscus from '../components/Giscus.astro';
 import XReplies from '../components/XReplies.astro';
 
-type Props = CollectionEntry<'blog'>['data'] & { 
-	headings?: { depth: number; slug: string; text: string }[],
-	seriesPosts?: CollectionEntry<'blog'>[],
-	id: string
+import RelatedPosts from '../components/RelatedPosts.astro';
+
+type Props = { 
+	post: CollectionEntry<'blog'>;
+	headings?: { depth: number; slug: string; text: string }[];
+	seriesPosts?: CollectionEntry<'blog'>[]; // Keep for legacy if needed, but we'll use RelatedPosts
 };
 
-const { title, description, pubDate, updatedDate, heroImage, headings, seriesPosts, id, tags, author } = Astro.props;
+const { post, headings } = Astro.props;
+const { title, description, pubDate, updatedDate, heroImage, tags, author, id } = { ...post.data, id: post.id };
 ---
 
 <html lang="en">
@@ -80,10 +83,10 @@ const { title, description, pubDate, updatedDate, heroImage, headings, seriesPos
 							<div class="flex flex-wrap gap-2.5">
 								{tags.map((tag) => (
 									<a 
-										href={`/tags/${tag}`} 
-										class="text-xs font-bold px-3.5 py-2 bg-muted/30 hover:bg-brand/10 hover:text-brand rounded-xl text-muted-foreground/80 transition-all border border-transparent hover:border-brand/20 tracking-wide uppercase"
+									  href={`/tags/${tag}`} 
+									  class="text-xs font-bold px-3.5 py-2 bg-muted/30 hover:bg-brand/10 hover:text-brand rounded-xl text-muted-foreground/80 transition-all border border-transparent hover:border-brand/20 tracking-wide uppercase"
 									>
-										#{tag}
+									  #{tag}
 									</a>
 								))}
 							</div>
@@ -92,28 +95,8 @@ const { title, description, pubDate, updatedDate, heroImage, headings, seriesPos
 
 					<PodcastStatus blogPostId={id} showDetails={false} />
 
-					{seriesPosts && seriesPosts.length > 1 && (
-						<div class="mt-16 p-8 bg-muted/20 border border-muted rounded-3xl">
-							<h3 class="text-lg font-bold mb-6 flex items-center gap-2 text-foreground">
-								<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-brand"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5z"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><path d="M6.5 18H20"/></svg>
-								Series: {seriesPosts[0].data.series}
-							</h3>
-							<div class="grid gap-3">
-								{seriesPosts.map((p, index) => (
-									<a 
-										href={`/blog/${p.id}/`} 
-										class={`flex items-center gap-4 p-4 rounded-xl transition-all ${p.data.title === title ? 'bg-brand/10 border border-brand/20 pointer-events-none' : 'hover:bg-muted border border-transparent'}`}
-									>
-										<span class={`flex shrink-0 w-8 h-8 items-center justify-center rounded-full text-xs font-bold ${p.data.title === title ? 'bg-brand text-white' : 'bg-muted-foreground/10 text-muted-foreground'}`}>
-											{index + 1}
-										</span>
-										<span class="font-medium text-foreground">{p.data.title}</span>
-										{p.data.title === title && <span class="ml-auto text-[10px] uppercase font-bold tracking-widest text-brand">Reading</span>}
-									</a>
-								))}
-							</div>
-						</div>
-					)}
+					{/* 1.9 Related Content & Series Navigation */}
+					<RelatedPosts post={post} />
 
 					<XReplies slug={id} />
 					<Giscus />

@@ -28,7 +28,7 @@ const seriesPosts = post.data.series
 	: [];
 ---
 
-<BlogPost {...post.data} id={post.id} headings={headings} seriesPosts={seriesPosts}>
+<BlogPost post={post} headings={headings} seriesPosts={seriesPosts}>
 	{isProtected && <PrivacyLock slug={post.id} />}
     <div id="protected-content" class={isProtected ? 'hidden' : ''}>
 	    <Content />
