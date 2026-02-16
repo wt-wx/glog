@@ -32,6 +32,34 @@
   - **AI Agent Integration**: 预集成 Gemini 1.5 Pro / Claude 3.5 认知核心，实现自然语言意图识别。
   - **Semantic Ideas**: 引入语义备忘录，通过 Telegram 随手记录的想法将由 AI 自动打标、分类并存入 Supabase 灵感库。
 
+### v1.9.3 - 系统集成与“奔跑者”叙事 (Systems Schematic & Running Man)
+- **Persona Refinement**: 重构 `/intro` 介绍页为专业的英文叙事，确立 **"S'ALL Running Man"** 品牌身份，深耕“万载演化中的奔跑者”哲学内核。
+- **Iconography Evolution**: 同步更新“黑洞 / 事件视界 (Event Horizon)”视觉 Badge，象征从古代信史到未来秩序的极致信息密度。
+- **Projects Schematic Refactor**: 彻底重构 `/projects` 页面为“技术蓝图 (Schematic)”风格网格。
+  - **Modular UI**: 采用极细线条网格与模块化单元格设计，对齐高分辨率工程美学。
+  - **Intelligence Status**: 引入动态“呼吸灯”状态监测（Live Status），实时反馈项目活跃度。
+  - **Interactive Titles**: 将外链集成至项目标题，配合滑入式箭头动效，大幅提升交互直觉性。
+- **Technical Aesthetics**: 全面采用等宽字体元数据与代码风格标签（`// Tag`），强化“元系统架构师”的技术严谨感。
+
+### v1.9.2 - 极致减法与元系统重构 (Minimalist UX & Meta-System Refactor)
+- **Minimalist UX Refactoring**: 实施“极致减法”设计，将原有的 Prev/Next 系列导航块合并至推荐列表，通过高亮标签实现语义引导，大幅降低视觉摩擦。
+- **Deep Intro Refactoring**: 彻底重构 `/intro` 介绍页面，摒弃浅层的标签罗列，转向“元系统架构师”与“文明解码者”的深刻哲学叙事，同步更新“系统核心”视觉 Badge。
+- **Content Saturation**: 自动化导入覆盖浏览器战争、大厂并购与技术历史的 5 篇深度长文。
+- **Remote Image Support**: 建立 Unsplash 远程图源授权体系。
+
+### v1.9.1 - 视觉微调与 UI 修复 (UI Polishing & Bug Fixes)
+- **Gallery UX Fix**: 修复 `/gallery` 页面访问申请按钮在暗色模式下的颜色冲突问题，统一品牌视觉。
+- **UI Consistency**: 统一“相关内容”模块的文章标题展示长度，确保在不同屏幕尺寸下的布局对齐。
+- **Astro Core Update**: 完成 Astro 5.17.2 核心升级，提升构建性能与稳定性。
+
+### v1.9.0 - 语义关联与阅读导航闭环 (Semantic Association & UX Loop)
+- **Related Content Engine**: 
+  - 引入智能关联算法：优先匹配 `series` (系列) 导向的强关联，其次根据 `tags` (标签) 权重实现语义推荐。
+  - 架构升级：在博文底部构建“语义上下文”模块，提升站内内容留存率与 SEO 权重。
+- **Minimalist Navigation (Scheme B+C)**:
+  - 采用强关联导航逻辑：清晰指引系列文章的 Prev/Next 流向，支持跨文章深度阅读。
+  - 极致视觉呈现：采用极简文本流设计，支持 `heroImage` 缩略图自适应展示，兼顾无图博文的排版美感。
+
 ### v1.8.0 - 视觉重构与内容权重系统 (Visual Revamp & Content Priority)
 - **Blog List Revamp**: 
   - 博文列表页全面进化为“图文流”模式，原生支持 `heroImage` 封面图展示。
@@ -279,4 +307,4 @@ Glog 采用多云容灾与全球加速架构，确保在任何网络环境下都
 
 ---
 
-沉淀知识，持续成长。 **Glog v1.8.0 Development in Progress.**
+沉淀知识，持续成长。 **Glog v1.9.3 Development in Progress.**

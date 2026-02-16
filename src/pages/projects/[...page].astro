@@ -69,6 +69,15 @@ export async function getStaticPaths({ paginate }) {
 			gradient: "from-orange-400/20 to-yellow-300/20"
 		},
 		{
+			title: "YouTube Transcript Automation Factory",
+			category: "Creative Lab",
+			description: "An automated pipeline for fetching YouTube transcripts, syncing with Google Sheets, and processing audio with Faster-Whisper for high-accuracy local transcription and archival.",
+			link: "https://github.com/wt-wx/youtube-transcript-tool",
+			tags: ["Python", "Automation", "Whisper AI", "YouTube API"],
+			status: "Active",
+			gradient: "from-red-600/20 to-orange-500/20"
+		},
+		{
 			title: "Wonten Infinite Official",
 			category: "Corporate",
 			description: "The official website of Wonten Infinite—a full-platform IoT multi-level distribution system benchmarked against Youzan and Weimob—showcasing the corporate vision, core technology, and business matrix.",
@@ -150,45 +159,57 @@ const projects = page.data;
 					</p>
 				</header>
 
-				<!-- Projects Grid -->
-				<div class="grid md:grid-cols-2 gap-8 animate-in fade-in slide-in-from-bottom-12 duration-1000 delay-200">
-					{projects.map((project) => (
-						<div class={`group relative p-8 rounded-3xl border border-muted/50 bg-white/50 dark:bg-white/5 backdrop-blur-sm hover:border-brand/40 transition-all duration-500 hover:shadow-2xl hover:shadow-brand/5 overflow-hidden`}>
-							<!-- Hover Gradient Decor -->
-							<div class={`absolute inset-0 bg-gradient-to-br ${project.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-700 -z-10`}></div>
-							
-							<div class="relative z-10 space-y-4">
-								<div class="flex justify-between items-start">
-									<span class="text-xs font-bold uppercase tracking-widest text-brand/80 px-3 py-1 bg-brand/5 rounded-full border border-brand/10">
+				<!-- Schematic Grid -->
+				<div class="grid grid-cols-1 md:grid-cols-2 gap-px bg-muted/10 border border-muted/20 rounded-3xl overflow-hidden animate-in fade-in slide-in-from-bottom-12 duration-1000 delay-200">
+					{projects.map((project, index) => (
+						<div class="group relative bg-[#fafafa] dark:bg-[#0a0a0a] p-8 md:p-10 hover:bg-white dark:hover:bg-white/[0.02] transition-colors duration-500">
+							<!-- Category & Status -->
+							<div class="flex justify-between items-start mb-8">
+								<div class="flex items-center gap-3">
+									<span class="text-[10px] font-black uppercase tracking-[0.2em] text-brand/60 italic">
 										{project.category}
-									</span>
-									<span class="text-xs font-medium text-muted-foreground/60 italic">
-										{project.status}
 									</span>
 								</div>
 								
-								<div class="space-y-2">
-									<h3 class="text-2xl md:text-3xl font-bold group-hover:text-brand transition-colors">
-										{project.title}
-									</h3>
-									<p class="text-muted-foreground leading-relaxed font-normal">
-										{project.description}
-									</p>
-								</div>
-
-								<div class="flex flex-wrap gap-2 pt-2">
-									{project.tags.map((tag) => (
-										<span class="text-xs font-medium px-2.5 py-1 bg-muted/40 rounded-lg text-muted-foreground group-hover:bg-brand/10 group-hover:text-brand transition-colors">
-											#{tag}
+								{project.status === 'Active' && (
+									<div class="flex items-center gap-2">
+										<span class="relative flex h-1.5 w-1.5">
+											<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand opacity-75"></span>
+											<span class="relative inline-flex rounded-full h-1.5 w-1.5 bg-brand"></span>
 										</span>
-									))}
-								</div>
-
-								{project.link && (
-									<a href={project.link} target="_blank" class="inline-flex items-center gap-2 text-sm font-bold text-brand mt-4 hover:gap-3 transition-all">
-										Visit Project <span>→</span>
-									</a>
+										<span class="text-[9px] font-black uppercase tracking-widest text-brand/60 italic">Live</span>
+									</div>
 								)}
+							</div>
+
+							<!-- Title & Description -->
+							<div class="space-y-4">
+								<h3 class="text-2xl md:text-3xl font-black tracking-tight group-hover:text-brand transition-all duration-500">
+									{project.link ? (
+										<a href={project.link} target="_blank" class="flex items-center gap-3 w-fit">
+											{project.title}
+											<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="text-brand/30 group-hover:text-brand opacity-0 group-focus:opacity-100 group-hover:opacity-100 -translate-x-2 group-hover:translate-x-0 transition-all duration-500 shrink-0"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+										</a>
+									) : project.title}
+								</h3>
+								<p class="text-muted-foreground leading-relaxed text-sm md:text-base font-normal max-w-lg">
+									{project.description}
+								</p>
+							</div>
+
+							<!-- Tech Stack (Tags) -->
+							<div class="mt-8 flex flex-wrap gap-x-4 gap-y-2">
+								{project.tags.map((tag) => (
+									<span class="font-mono text-[10px] text-muted-foreground/40 hover:text-brand transition-colors uppercase tracking-widest">
+										// {tag}
+									</span>
+								))}
+							</div>
+
+							<!-- Decorative Corner (Hover only) -->
+							<div class="absolute top-0 right-0 w-8 h-8 opacity-0 group-hover:opacity-100 transition-opacity">
+								<div class="absolute top-4 right-4 w-[2px] h-4 bg-brand/20"></div>
+								<div class="absolute top-4 right-4 h-[2px] w-4 bg-brand/20"></div>
 							</div>
 						</div>
 					))}
