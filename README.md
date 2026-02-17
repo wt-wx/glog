@@ -23,11 +23,15 @@
 - **Cloud Brain**: 深度集成 Google Calendar/Tasks OAuth 体系，构建基于 Telegram 的自动化简报与交互式意图管理。
 - **Infrastructure**: 基于 Supabase 实现加密 Token 持久化存储，推出全新的预览版 Admin 管理后台。
 
+### v1.9.7 - 架构收敛与交互重构 (Architecture Convergence & Interaction Revamp)
+- **Homepage Pivot**: 将 `/intro` 提升为全站根路径 (`/`)，确立 "Intro-First" 的叙事模式。
+- **Routing Strategy**: 分离 `Blog` 首页 (`/blog`) 与全量文章 `Archives` (`/archives`)，优化分页导航与面包屑逻辑。
+- **Navigation Unified**: 统一全站导航标签为 `HOME`, `About`, `Blog`, `Project`；在 Intro 页集中展示社交矩阵（新增 FB, IG 高清图标）。
+- **Footer UI Refinement**: 区分页脚交互逻辑，左侧功能链保持胶囊背景 Hover，右侧社交链切换为轻量化缩放与品牌色点亮效果。
+
 ### v1.9.1 - v1.9.6 - 叙事重构与极简协议 (System Narrative & Minimalist Protocol)
 - **Intro & Projects**: 确立 "S'ALL Running Man" 品牌身份，重构 `/intro` 为单页纵向极简布局，引入 "Project & Case" 动态品牌墙与技术蓝图网格布局。
-- **Intro Proxy (v1.9.6)**: 优化 `cloudflare.worker.js` 代理映射，修正 `/intro` 路径匹配兼容性，解决多云分发环境下的访问异常并增强错误诊断输出。
-- **UI & State Fix**: 缩小 `/intro` 页面间距并放大头像；修复 `tags/[tag].astro` 在 SSR 模式下的状态丢失问题（补齐 `prerender` 声明）；修复 `stack` 和 `gear` 页面中由于外链实效导致的 Logo 显示异常（已切换至维基百科 SVG 及 Google Favicon 稳态服务）。
-- **Engine & SEO**: 确立 `/blog` 稳态路由，修复全站搜索与 RSS 闭环，引入博文智能内容关联算法与语义上下文。
+- **UI & State Fix**: 提高 `stack` 与 `gear` 页面图标稳定性；修复 `tags/[tag].astro` SSR 状态丢失问题。
 
 ### v1.6.0 - v1.8.0 - 视觉体系与混合云架构 (AI Hybrid & Visual Revamp)
 - **Content UI**: 重构列表页为“图文流”模式，引入 `sticky` 置顶权重、多维元数据 (Author/Tags) 及文章阅读进度条。
