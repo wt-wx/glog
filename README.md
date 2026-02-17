@@ -23,8 +23,10 @@
 - **Cloud Brain**: 深度集成 Google Calendar/Tasks OAuth 体系，构建基于 Telegram 的自动化简报与交互式意图管理。
 - **Infrastructure**: 基于 Supabase 实现加密 Token 持久化存储，推出全新的预览版 Admin 管理后台。
 
-### v1.9.1 - v1.9.5 - 叙事重构与极简协议 (System Narrative & Minimalist Protocol)
+### v1.9.1 - v1.9.6 - 叙事重构与极简协议 (System Narrative & Minimalist Protocol)
 - **Intro & Projects**: 确立 "S'ALL Running Man" 品牌身份，重构 `/intro` 为单页纵向极简布局，引入 "Project & Case" 动态品牌墙与技术蓝图网格布局。
+- **Intro Proxy (v1.9.6)**: 优化 `cloudflare.worker.js` 代理映射，修正 `/intro` 路径匹配兼容性，解决多云分发环境下的访问异常并增强错误诊断输出。
+- **UI & State Fix**: 缩小 `/intro` 页面间距并放大头像；修复 `tags/[tag].astro` 在 SSR 模式下的状态丢失问题（补齐 `prerender` 声明）；修复 `stack` 和 `gear` 页面中由于外链实效导致的 Logo 显示异常（已切换至维基百科 SVG 及 Google Favicon 稳态服务）。
 - **Engine & SEO**: 确立 `/blog` 稳态路由，修复全站搜索与 RSS 闭环，引入博文智能内容关联算法与语义上下文。
 
 ### v1.6.0 - v1.8.0 - 视觉体系与混合云架构 (AI Hybrid & Visual Revamp)
@@ -209,4 +211,4 @@ Glog 采用多云容灾与全球加速架构，确保在任何网络环境下都
 
 ---
 
-沉淀知识，持续成长。 **Glog v1.9.5 Development in Progress.**
+沉淀知识，持续成长。 **Glog v1.9.6 Development in Progress.**

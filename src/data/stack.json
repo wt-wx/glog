@@ -25,14 +25,14 @@
                 "name": "Python",
                 "url": "https://www.python.org",
                 "description": "High-performance API development with modern Python features.",
-                "icon": "https://www.python.org/static/img/python-logo.png",
+                "icon": "https://www.python.org/favicon.ico",
                 "gradient": "from-emerald-500/20 to-teal-500/20"
             },
             {
                 "name": "Golang",
                 "url": "https://go.dev",
                 "description": "Building scalable, efficient, and reliable backend systems.",
-                "icon": "https://go.dev/blog/go-brand/Go-Logo/PNG/Go-Logo_Blue.png",
+                "icon": "https://go.dev/favicon.ico",
                 "gradient": "from-cyan-500/20 to-blue-500/20"
             },
             {
@@ -53,21 +53,21 @@
                 "name": "Godot",
                 "url": "https://godotengine.org",
                 "description": "The world's most advanced open source game engine.",
-                "icon": "https://godotengine.org/assets/img/logo.svg",
+                "icon": "https://godotengine.org/favicon.ico",
                 "gradient": "from-indigo-600/20 to-blue-600/20"
             },
             {
                 "name": "OpenResty",
                 "url": "https://openresty.org",
                 "description": "The world's most advanced open source web platform based on Nginx.",
-                "icon": "https://openresty.org/img/logo.png",
+                "icon": "https://openresty.org/favicon.ico",
                 "gradient": "from-indigo-600/20 to-blue-600/20"
             },
             {
                 "name": "Elysia",
                 "url": "https://elysiajs.com/",
                 "description": "The bleeding edge of TypeScript development experience.",
-                "icon": "https://elysiajs.com/assets/elysia.svg",
+                "icon": "https://elysiajs.com/favicon.ico",
                 "gradient": "from-pink-500/20 to-orange-500/20"
             },
             {
@@ -91,9 +91,9 @@
             },
             {
                 "name": "Powershell",
-                "url": "https://learn.microsoft.com/en-us/powershell/",
+                "url": "https://microsoft.com/PowerShell/",
                 "description": "Windows built-in command-line shell and scripting language.",
-                "icon": "https://learn.microsoft.com/en-us/powershell/media/index/powershell-icon.png",
+                "icon": "https://www.powershellgallery.com/favicon.ico",
                 "gradient": "from-orange-600/20 to-red-600/20"
             },
             {

@@ -30,7 +30,7 @@
             {
                 "name": "Moto",
                 "url": "https://www.motorola.com.cn/x40",
-                "icon": "https://shop.lenovo.com.cn/favicon.ico",
+                "icon": "https://en-us.support.motorola.com/favicon.ico",
                 "description": "Full data center, serving as the core node for business and private data storage.",
                 "gradient": "from-blue-500/20 to-cyan-500/20"
             }
@@ -73,14 +73,14 @@
             {
                 "name": "Tab 60",
                 "url": "https://vortexgear.store/products/tab-60",
-                "icon": "https://vortexgear.store/cdn/shop/files/Shopify_1__1_53eff4cd-7b59-41e7-b170-f05d7acb71da.png",
+                "icon": "https://vortexgear.store/favicon.ico",
                 "description": "Compact mechanical keyboard designed for precise and efficient typing.",
                 "gradient": "from-orange-500/20 to-yellow-500/20"
             },
             {
                 "name": "Swan惠威",
                 "url": "https://www.hivi.com/",
-                "icon": "https://res.hivi.com/images/index-logo.svg",
+                "icon": "https://www.hivi.com/favicon.ico",
                 "description": "Consistent audio landscape and integrated smart home hub.",
                 "gradient": "from-white/20 to-gray-200/20"
             }

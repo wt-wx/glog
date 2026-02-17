@@ -163,35 +163,32 @@ export const introWorker = {
     async fetch(request) {
         const url = new URL(request.url);
         // 映射：根路径代理到 /intro/，其余保持不变（资源文件）
-        const path = url.pathname === "/" ? "/intro/" : url.pathname;
+        const path = url.pathname === "/" ? "/intro" : url.pathname;
         const search = url.search;
 
-        // 尝试多个后端，避免单点故障或重定向循环
         const backends = [
             "glog.vercel.geniux.net",
             "glog.netlify.geniux.net",
             "glog.qcloud.geniux.net"
         ];
 
+        let lastError = "No backends configured";
         for (const domain of backends) {
             try {
                 const targetUrl = `https://${domain}${path}${search}`;
                 const reqHeaders = new Headers(request.headers);
 
-                // 必须重写入站 Host 为目标后端域名，否则会导致重定向循环
                 reqHeaders.set("Host", domain);
-                // 移除 Referer 防止后端根据来源进行域名纠偏
                 reqHeaders.delete("Referer");
 
                 const response = await fetch(targetUrl, {
                     method: request.method,
                     headers: reqHeaders,
-                    redirect: "follow" // 允许跟随后端可能存在的内部重定向
+                    redirect: "follow"
                 });
 
                 if (response.ok) {
                     const headers = cleanHeaders(response.headers);
-                    // 彻底移除跳转相关的 Header，确保浏览器留在当前域名
                     headers.delete("Location");
                     headers.delete("Refresh");
 
@@ -200,14 +197,17 @@ export const introWorker = {
                         statusText: response.statusText,
                         headers: headers
                     });
+                } else {
+                    lastError = `Backend ${domain} returned ${response.status} ${response.statusText}`;
                 }
             } catch (e) {
+                lastError = `Fetch failed for ${domain}: ${e.message}`;
                 console.error(`Intro Sync Failed for ${domain}: ${e.message}`);
-                continue; // 尝试下一个后端
+                continue;
             }
         }
 
-        return new Response("Intro Page Proxy Error: All backends unreachable or returned error.", {
+        return new Response(`Intro Page Proxy Error: ${lastError}`, {
             status: 502,
             headers: { "Content-Type": "text/plain; charset=utf-8" }
         });

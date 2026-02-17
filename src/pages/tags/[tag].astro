@@ -1,4 +1,5 @@
 ---
+export const prerender = true;
 import { getCollection } from 'astro:content';
 import BaseHead from '../../components/BaseHead.astro';
 import Footer from '../../components/Footer.astro';
@@ -48,14 +49,14 @@ const { posts } = Astro.props;
 					Posts tagged with <span class="text-brand">#{tag}</span>
 				</h1>
 				<p class="text-xl text-muted-foreground opacity-80 max-w-2xl leading-relaxed">
-					共找到 {posts.length} 篇相关文章。
+					共找到 {posts?.length || 0} 篇相关文章。
 				</p>
 			</header>
 
 			<div class="space-y-12 animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-200">
 				{posts.map((post) => (
 					<article class="group relative">
-						<a href={`/archives/${post.id}/`} class="block space-y-4">
+						<a href={`/blog/${post.id}/`} class="block space-y-4">
 							<div class="flex flex-col md:flex-row md:items-baseline justify-between gap-4">
 								<h2 class="text-2xl md:text-4xl font-black group-hover:text-brand transition-all leading-tight">
 									{post.data.title}
