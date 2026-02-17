@@ -163,7 +163,7 @@ export const introWorker = {
     async fetch(request) {
         const url = new URL(request.url);
         // 映射：根路径代理到 /intro/，其余保持不变（资源文件）
-        const path = url.pathname === "/" ? "/intro" : url.pathname;
+        const path = url.pathname;
         const search = url.search;
 
         const backends = [
