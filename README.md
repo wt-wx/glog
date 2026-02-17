@@ -19,115 +19,23 @@
 
 ## 🏗 功能版本迭代 (Version History)
 
-### v2.0.0 - Genius OS: 个人云端大脑进化 (Cloud Brain Evolution)
-- **Google Assistant Ecosystem (Phase 1)**:
-  - **Unified OAuth**: 深度集成 Google OAuth 2.0，获得 Calendar (日程) 与 Tasks (待办) 的原生读写权限。
-  - **Token Management**: 基于 Supabase 实现加密 Token 的持久化存储与全自动刷新机制。
-  - **Admin Command Center**: 全新的管理后台 (`/admin/dashboard`)，实时监控同步状态与系统心跳。
-- **Telegram Connectivity (Phase 2)**:
-  - **Daily Briefing**: 自动化简报引擎，每天准时通过 Telegram 推送今日日程与待办清单。
-  - **Interactive Bot**: 部署 Telegram Webhook 架构，支持通过 `/today`、`/tasks` 等指令实时调取大脑数据。
-  - **Hybrid Notification**: 结合 Google API 与 Telegram Bot API，构建“大脑 -> 手机”的即时触达链路。
-- **Cognitive Core (Phase 3) [Planned]**:
-  - **AI Agent Integration**: 预集成 Gemini 3.0 Pro / Claude 4.5 认知核心，实现自然语言意图识别。
-  - **Semantic Ideas**: 引入语义备忘录，通过 Telegram 随手记录的想法将由 AI 自动打标、分类并存入 Supabase 灵感库。
+### v2.0.0 - Genius OS: 云端大脑进化 (Cloud Brain Evolution)
+- **Cloud Brain**: 深度集成 Google Calendar/Tasks OAuth 体系，构建基于 Telegram 的自动化简报与交互式意图管理。
+- **Infrastructure**: 基于 Supabase 实现加密 Token 持久化存储，推出全新的预览版 Admin 管理后台。
 
-### v1.9.1 - v1.9.3 - 系统叙事与视觉协议重构 (System Narrative & Visual Protocol)
-- **Identity & Narrative (Intro Update)**:
-  - **Running Man**: 确立 **"S'ALL Running Man"** 品牌身份，完成 `/intro` 向专业的英文叙事与哲学内核重构。
-  - **Linear UX**: 重构 `/intro` 为单列线性纵向布局，结合 `clamp` 流体字号与“非对称平衡”对齐（Location居右，CTA居中）。
-  - **Iconography**: 引入“黑洞 / 事件视界 (Event Horizon)”视觉 Badge，象征从古代信史到未来秩序的极致信息密度。
-- **Projects & High-Res UI**:
-  - **Schematic Grid**: 将 `/projects` 页面重构为“技术蓝图 (Schematic)”风格网格，引入模块化单元格与动态“呼吸灯”状态监测。
-  - **Refined Buttons**: 强制实施移动端按钮横向弹性平铺，并统一 PC 端紧凑型按钮规格，实现跨端体验的一致性。
-- **Core Engine & Content**:
-  - **Smart Association**: 引入智能关联算法与博文 Prev/Next 闭环，构建站内 SEO 的“语义上下文”。
-  - **Content Saturation**: 自动化导入 5 篇深度长文（涵盖技术并购、浏览器战争等），显著提升深度内容储备。
-- **Infrastructure**:
-  - **Core Update**: 完成 Astro 5.17.2 官方核心升级。
-  - **Stability**: 建立 Unsplash 远程图源授权体系，修复暗色模式下的 Gallery 交互冲突。
+### v1.9.1 - v1.9.5 - 叙事重构与极简协议 (System Narrative & Minimalist Protocol)
+- **Intro & Projects**: 确立 "S'ALL Running Man" 品牌身份，重构 `/intro` 为单页纵向极简布局，引入 "Project & Case" 动态品牌墙与技术蓝图网格布局。
+- **Engine & SEO**: 确立 `/blog` 稳态路由，修复全站搜索与 RSS 闭环，引入博文智能内容关联算法与语义上下文。
 
-### v1.8.0 - 视觉重构与内容权重系统 (Visual Revamp & Content Priority)
-- **Blog List Revamp**: 
-  - 博文列表页全面进化为“图文流”模式，原生支持 `heroImage` 封面图展示。
-  - 优化响应式布局，在移动端与桌面端均提供极致的视觉平衡。
-- **Sticky Post (博文置顶)**:
-  - 引入 `sticky` 权重系统，支持在 Frontmatter 中一键置顶重要内容。
-  - 视觉增强：置顶博文原生配备 **Pinned** 徽章标识。
-  - 排序引擎升级：置顶文章始终优先排列，其次按发布日期回溯。
+### v1.6.0 - v1.8.0 - 视觉体系与混合云架构 (AI Hybrid & Visual Revamp)
+- **Content UI**: 重构列表页为“图文流”模式，引入 `sticky` 置顶权重、多维元数据 (Author/Tags) 及文章阅读进度条。
+- **AI Media**: 建立 Blog-to-Podcast 自动化管线，实现 SaaS (Wondercraft) 与私有云 (NotebookLM) 的音频协同生成及 Transistor 托管。
+- **Security & Social**: 集成 Supabase Auth 隐私锁保护敏感内容，引入 X Replies 脚本抓取社交平台评论并落地本地展示。
 
-### v1.7.0 - 国际化全栈增强与内容感知 (i18n & Metadata DX)
-- **Project i18n & Revamp**: 
-  - 完整重构并翻译 `/projects` 页面，对齐国际化叙事逻辑。
-  - 优化项目展示架构，增强跨平台展示的适配性。
-- **Blog UX Enhancement**:
-  - 内容页深度增强：在博文底部集成 Tags 标签云与 Author (Written By) 动态落款。
-  - 优化移动端阅读体验，调整元数据模块的视觉层级与呼吸感。
-- **Content Engine**:
-  - 更新组件 Schema 校验，原生支持 `author` 等多维元数据字段。
-  - 优化 `BlogPost` 布局逻辑，提升内容承载的标准化程度。
-
-### v1.6.0 - 博客转播客 (AI Hybrid Cloud) [Partially Implemented]
-- **AI Podcast Generator (混合云架构)**:
-  - 推出 **Blog-to-Podcast** 自动化管线：利用 AI 将 Markdown 博客一键转为专业播客节目。 ✅ (Implemented in `src/lib/podcast`)
-  - **Hybrid Architecture (SaaS + VPS)**:
-    - **Deep Dive Mode**: 利用已有的 **VPS (4C4G)** 部署私有 `NotebookLM-Bridge` 服务，运行 Playwright 模拟用户操作，生成高质量双人深度对话音频。 ❌ (Pending: Bridge service & Playwright logic not in current repo)
-    - **News Mode**: 集成 **Wondercraft / ElevenLabs API**，为短快讯提供稳定、可控的专业播音级 TTS 服务。 ✅ (Implemented)
-  - **Quality Control**: 引入自动音频质量分析与长度校验，确保输出内容达标。 ✅ (Implemented via FFmpeg/FFprobe)
-  - **Podcast Hosting**: 深度集成 **Transistor.fm** API，实现音频上传、Episode 创建与 RSS Feed 推送的全流程自动化。 ✅ (Implemented)
-
-### v1.5.0 - 隐私保护与社交深度集成
-- **Privacy Lock (Supabase)**: 
-  - 集成 Supabase Auth & X Login。
-  - 为博文引入“访问暗号”机制，支持对特定敏感内容的权限锁定。
-- **Interactive Sync (X Replies)**: 
-  - 引入 `sync-replies` 脚本，自动抓取推特评论并落成本地数据。
-  - 博文下方新增互动区，实时展示来自 X 的讨论。
-- **NAS Gallery**: 
-  - 启用 `/gallery` 页面，支持私有 NAS 图片库的外部链接集成。
-- **Cloudflare Hybrid Worker**: 
-  - 统一 `geniux.net` 与 `glog.geniux.net` 的路由逻辑，实现单 Worker 全站加速。
-
-### v1.4.0 - 知识图谱与海量导航
-- **Bookmarks (智能书签库)**: 
-  - 引入 `/bookmarks` 页面，支持 4700+ 浏览器书签的自动化同步与归类.
-  - 构建 `parse-bookmarks` 脚本：智能提取 Favicon 并按 **域名 (Domain)** 物理分组，解决超大规模外部链接管理难题.
-  - 集成**毫秒级客户端搜索**，支持全量 1800+ 域名下的实时内容检索.
-- **Pagination (内容分级承载)**: 
-  - 为首页与博文归档引入全自动翻页系统，规避海量静态资源下的一次性加载卡顿。
-- **Personal Branding (极致名片)**: 
-  - 打造 `/intro` 高端交互介绍页，集成渐进式徽章动画与 Grayscale-to-Color 交互 avatar。
-- **Design System Fixes**: 
-  - 全站链接样式逻辑重构，移除全局侵入式透明度，显著提升有色按钮与辅助文本的视觉对比度。
-
-### v1.3.0 - 社交自动化与全站出海
-- **Social Integration**: 
-  - 引入 **X-Log (Native Micro-blog)** 模式，摆脱第三方脚本依赖。
-  - 构建 `sync-x` 脚本：自动抓取个人 X 动态并落成静态内容，解决加载慢与政策限制问题。
-  - 构建 `push-x` 脚本：一键将 Glog 博文推送到 X 账号，实现“一处编写，全网同步”。
-- **Localization**: 全站 Cookie Consent 等隐私控件全英文国际化。
-- **RSS 2.0+**: 增强 RSS 协议，支持 Full-Content 广播，可用于 IFTTT 自动同步至 WordPress/Blogger/Facebook。
-
-### v1.2.0 - 自动内容发现系统
-- **Tagging Engine**: 
-  - 自动从 Frontmatter 提取标签并聚合。
-  - 引入 `/tags` 标签云与动态分类路由。
-- **Navigation UX**: 
-  - **Back to Top (Smart)**：不仅会悬浮，还能感应 Footer 自动弹起，解决遮挡底部文字的物理冲突。
-  - **Table of Contents (Sliding)**：优化了侧边栏动画，隐藏移动端 ToC，保持阅读纯粹性。
-
-### v1.1.0 - 极致 UI/UX 体验
-- **Glassmorphism**: 基于 Tailwind v4 的磨砂玻璃质感设计系统。
-- **Search Engine**: 
-  - 集成 **Fuse.js** 全文搜索，毫秒级响应。
-  - 全局 `Ctrl + K` 呼出搜索对话框。
-  - 全站 **View Transitions** 顺滑过渡。
-- **Accessibility**: 增加了进度条指示器、智能返回按钮。
-
-### v1.0.0 - 核心博客启动
-- Astro 5.0 核心部署。
-- Markdown 内容引擎支持系列文章 (`series`)、标签 (`tags`) 与自动归档。
-- 部署多核跨云平台负载均衡（Cloudflare / Vercel）。
+### v1.0.0 - v1.5.0 - 核心启动与知识图谱 (Genesis & Core Engine)
+- **Infrastructure**: 基于 Astro 5.0 + Tailwind v4 构建极致性能框架，集成 Fuse.js 全文搜索与 View Transitions 过渡动画。
+- **Data Engine**: 构建 4700+ 超大规模书签库自动同步、X-Log 原生动态抓取及支持全网同步的 RSS 2.0+ 增强协议。
+- **UX Foundation**: 确立毛玻璃 (Glassmorphism) 设计系统，引入 ToC 侧边栏、分页器及 Cloudflare 全球负载均衡方案。
 
 ---
 
@@ -274,6 +182,13 @@ Glog 采用多云容灾与全球加速架构，确保在任何网络环境下都
 - [ ] **VPS 服务开发**: 独立开发 `NotebookLM-Bridge` (Playwright + Python) 并部署至 4C4G VPS。
 - [ ] **UI/API 联动**: 补齐 `podcast-manager.astro` 依赖的 `/api/podcast/*` 后端接口（Publish, Edit, Analytics）。
 
+### 5. Genius OS (个人云端大脑)
+- [ ] **Google OAuth 深度集成**: 完善 Google Calendar 与 Tasks 的双向同步协议。
+- [ ] **Telegram 交互中枢**: 部署 Webhook 架构，实现 `/today`、`/tasks` 指令实时调取与自动化简报推送。
+- [ ] **AI 认知核心 (Phase 3)**: 接入 Gemini/Claude 认知层，实现灵感的自动分类、打标并存入 Supabase 语义库。
+- [ ] **Admin Dashboard**: 补齐管线监控后端，实现大脑活跃度与 API 消耗的实时可视化。
+
+
 ## ⚠️ 技术债务清单 (Technical Debt)
 
 ### 1. 架构稳定性
@@ -294,4 +209,4 @@ Glog 采用多云容灾与全球加速架构，确保在任何网络环境下都
 
 ---
 
-沉淀知识，持续成长。 **Glog v1.9.3 Development in Progress.**
+沉淀知识，持续成长。 **Glog v1.9.5 Development in Progress.**

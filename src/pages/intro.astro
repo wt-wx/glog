@@ -1,111 +1,131 @@
 ---
 import BaseHead from '../components/BaseHead.astro';
+import HeaderLink from '../components/HeaderLink.astro';
+
+const logos = [
+	{ name: "Google", color: "text-[#4285F4]" },
+	{ name: "Microsoft", color: "text-[#00A4EF]" },
+	{ name: "Meta", color: "text-[#FF0000]" },
+	{ name: "OpenAI", color: "text-[#412991]" },
+	{ name: "Tencent", color: "text-[#0052D9]" },
+	{ name: "Alibaba", color: "text-[#FF6600]" },
+	{ name: "ByteDance", color: "text-[#000666]" }
+];
 ---
 
 <!doctype html>
 <html lang="en">
 	<head>
 		<BaseHead title="Geniux | Intro" description="Personal introduction of Geniux" />
+		<link rel="shortcut icon" href="/avatar.png" type="image/png">
 		<link rel="preconnect" href="https://fonts.googleapis.com">
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 		<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
 	</head>
-	<body class="bg-[#fafafa] dark:bg-[#0a0a0a] text-[#1a1a1a] dark:text-[#f0f0f0] font-['Outfit',sans-serif] selection:bg-brand/10 selection:text-brand">
-		<main class="min-h-screen flex items-start justify-center p-6 sm:p-12 pt-13 sm:pt-22 md:pt-32 relative overflow-hidden">
-			<!-- Subtle Background Decorations -->
-			<div class="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-brand/5 blur-[120px] rounded-full"></div>
-			<div class="absolute bottom-[-10%] right-[-10%] w-[30%] h-[30%] bg-brand/10 blur-[100px] rounded-full"></div>
+	<body class="bg-[#fafafa] dark:bg-[#0a0a0a] text-[#1a1a1a] dark:text-[#f0f0f0] font-['Outfit',sans-serif] selection:bg-brand/10 selection:text-brand overflow-x-hidden">
+		<!-- 1. Navigation Row -->
+		<nav class="w-full h-20 flex justify-center items-center gap-8 relative z-50 bg-white/50 dark:bg-black/50 backdrop-blur-sm">
+			<HeaderLink href="/intro">Home</HeaderLink>
+			<HeaderLink href="/about">About</HeaderLink>
+			<HeaderLink href="/blog">Glog</HeaderLink>
+			<HeaderLink href="/projects">Project</HeaderLink>
+		</nav>
+		
+		<main class="min-h-[calc(100vh-80px)] w-full flex flex-col items-center pt-10 sm:pt-14 pb-24 px-6 sm:px-12 relative transition-all duration-500">
+			<!-- Background Decorations -->
+			<div class="absolute top-0 left-0 w-full h-full pointer-events-none overflow-hidden">
+				<div class="absolute top-[-5%] left-[-5%] w-[30%] h-[30%] bg-brand/5 blur-[80px] rounded-full"></div>
+				<div class="absolute bottom-[-5%] right-[-5%] w-[25%] h-[25%] bg-brand/10 blur-[80px] rounded-full"></div>
+			</div>
 
-			<div class="max-w-3xl w-full flex flex-col items-start gap-10 relative z-10 animate-in fade-in slide-in-from-bottom-8 duration-1000">
-				<!-- Header section: Avatar + Name -->
-				<header class="flex flex-col sm:flex-row items-center sm:items-end gap-6 sm:gap-10">
-					<!-- Avatar Image -->
-					<div class="relative w-32 h-32 sm:w-40 sm:h-40 shrink-0">
-						<div class="absolute inset-0 border border-dashed border-brand/20 rounded-full animate-[spin_20s_linear_infinite]"></div>
-						<div class="absolute inset-2 rounded-full overflow-hidden border-2 border-white dark:border-white/10 shadow-xl">
-							<img src="/avatar.png" alt="Avatar" class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700" />
-						</div>
-						<div class="absolute -bottom-1 -right-1 bg-white dark:bg-black p-2 rounded-xl shadow-lg border border-muted group/badge overflow-hidden">
-							<div class="relative z-10 w-5 h-5 flex items-center justify-center">
-								<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="text-brand group-hover/badge:scale-125 transition-transform duration-700">
-									<circle cx="12" cy="12" r="4" fill="currentColor"/>
-									<path d="M22 12C22 14.5 19 16.5 12 16.5C5 16.5 2 14.5 2 12M2 12C2 9.5 5 7.5 12 7.5C19 7.5 22 9.5 22 12" stroke="currentColor" stroke-width="1.5" opacity="0.6"/>
-								</svg>
+			<div class="max-w-3xl w-full flex flex-col items-center text-center gap-10 relative z-10 animate-in fade-in slide-in-from-bottom-4 duration-700">
+				
+				<!-- 2. Centered Avatar -->
+				<div class="relative w-32 h-32 group">
+					<div class="absolute inset-0 border border-dashed border-brand/20 rounded-full animate-[spin_30s_linear_infinite] group-hover:border-brand/40"></div>
+					<div class="absolute inset-1.5 rounded-full overflow-hidden border-2 border-white dark:border-white/10 shadow-lg z-10">
+						<img src="/avatar.png" alt="Geniux Avatar" class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-500" />
+					</div>
+					<div class="absolute bottom-0 right-0 bg-white dark:bg-black p-1.5 rounded-lg shadow-md border border-muted z-20">
+						<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-brand">
+							<circle cx="12" cy="12" r="4" fill="currentColor"/>
+							<path d="M22 12C22 14.5 19 16.5 12 16.5C5 16.5 2 14.5 2 12M2 12C2 9.5 5 7.5 12 7.5C19 7.5 22 9.5 22 12" stroke="currentColor" stroke-width="2" opacity="0.6"/>
+						</svg>
+					</div>
+				</div>
+
+				<!-- 3 & 4. Greeting, Location & Tagline -->
+				<div class="space-y-8 w-full">
+					<div class="flex flex-col items-center gap-5">
+						<div class="flex flex-wrap items-center justify-center gap-4">
+							<p class="text-xs font-bold tracking-[0.2em] text-brand uppercase">Hi, I'm Geniux 🫣</p>
+							<div class="hidden sm:block w-px h-3 bg-muted/30"></div>
+							<div class="flex items-center gap-2 px-3 py-1 rounded-full border border-muted/20 bg-muted/5 text-[10px] font-medium text-muted-foreground/60 transition-colors hover:border-brand/30">
+								<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="animate-pulse"><circle cx="12" cy="12" r="10"/><line x1="2" x2="22" y1="12" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+								The Invariant Matrix, Earth (2026)
 							</div>
 						</div>
-					</div>
 
-					<!-- Name / Title -->
-					<div class="space-y-4 text-center sm:text-left">
-						<h1 class="flex flex-row flex-nowrap items-baseline gap-[0.2em] text-4xl sm:text-6xl font-extrabold tracking-tight leading-none whitespace-nowrap">
-							<span>Hi, I'm</span>
-							<span class="bg-clip-text text-transparent bg-gradient-to-r from-brand to-brand-dark">Geniux</span>
-							<span>🤔</span>
+						<h1 class="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight leading-tight text-balance">
+							Entrepreneur, <span class="bg-clip-text text-transparent bg-gradient-to-r from-brand to-brand-dark">Industrialist</span> & Independent Thinker.
 						</h1>
-						<p class="text-xl sm:text-2xl text-muted-foreground font-light italic">
-							Entrepreneur, Industrialist & Independent Thinker.
-						</p>
 					</div>
-				</header>
-
-				<!-- Location -->
-				<div class="w-full flex justify-end items-center gap-2 text-sm text-muted-foreground/60 font-medium -mt-4">
-					<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" x2="22" y1="12" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-					The Invariant Matrix, Earth (2026)
 				</div>
 
-				<!-- Introduction -->
-				<p class="text-lg leading-relaxed text-muted-foreground max-w-3xl font-normal">
-					I am <b>S'ALL Running Man</b>, seeking the granules of logic across ten thousand years of evolution. My exploratory boundaries span from the <b>underlying protocols of ancient history</b> to the <b>strategic M&A of modern tech giants</b>, and from <b>multi-agent R&D paradigms</b> to the <b>structural evolution of industrial energy systems</b>. In this endless marathon, I deconstruct historical archives, business maneuvers, and engineering limits to capture the invariant echoes hidden in chaos, searching for the absolute architecture of future order.
-				</p>
-
-				<!-- Social Icons -->
-				<div class="flex flex-wrap gap-4 pt-2">
-					<a href="https://x.com/geniux" target="_blank" class="p-2.5 border border-muted/50 rounded-xl hover:border-brand hover:text-brand transition-all hover:scale-110 active:scale-95 bg-white/50 dark:bg-white/5 shadow-sm" aria-label="X (Twitter)">
-						<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z"/></svg>
-					</a>
-					<a href="https://about.me/geniux" target="_blank" class="p-2.5 border border-muted/50 rounded-xl hover:border-brand hover:text-brand transition-all hover:scale-110 active:scale-95 bg-white/50 dark:bg-white/5 shadow-sm" aria-label="About.me">
-						<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M3.158 9.897v4.131h.65v-.408c.23.297.577.483.961.483.768 0 1.332-.582 1.332-1.573 0-.967-.558-1.568-1.332-1.568-.372 0-.719.168-.96.49V9.897Zm10.285.322v.818h-.495v.563h.495v1.729c0 .501.26.774.769.774.297 0 .49-.087.607-.192l-.155-.496a.4.4 0 0 1-.285.112c-.186 0-.285-.155-.285-.36V11.6h.607v-.563h-.607v-.818zm-5.488.743c-.954 0-1.536.706-1.536 1.567 0 .855.582 1.574 1.536 1.574s1.537-.719 1.537-1.574c0-.86-.583-1.567-1.537-1.567m14.577 0c-.886 0-1.518.7-1.518 1.567 0 .948.663 1.574 1.567 1.574.47 0 .91-.155 1.214-.44l-.297-.427c-.217.216-.557.334-.855.334-.564 0-.898-.378-.948-.824H24v-.16c0-.942-.57-1.624-1.468-1.624m-4.576 0c-.459 0-.849.298-.979.477v-.402h-.65v2.991h.65v-2.093c.137-.192.403-.397.694-.397.354 0 .49.217.49.54v1.95h.65v-2.093c.13-.199.403-.397.694-.397.353 0 .495.217.495.54v1.95h.65v-2.161c0-.607-.315-.905-.86-.905-.453 0-.85.28-1.016.545-.1-.322-.372-.545-.818-.545m-16.55 0c-.477 0-.91.15-1.257.484l.272.452a1.2 1.2 0 0 1 .886-.384c.41 0 .7.21.7.557v.446c-.223-.254-.563-.384-.972-.384-.49 0-1.035.285-1.035.979 0 .656.551.99 1.035.99.396 0 .75-.142.972-.402v.328h.65V12.04c0-.799-.582-1.078-1.25-1.078m8.449.075v2.118c0 .607.322.948.966.948.47 0 .842-.235 1.053-.471v.396h.65v-2.991h-.65v2.1a.99.99 0 0 1-.762.39c-.372 0-.607-.149-.607-.613v-1.877zm12.67.458c.589 0 .83.434.85.787H21.69c.025-.36.285-.787.837-.787m-17.942.043c.514 0 .843.415.843.992 0 .582-.329.997-.843.997a.98.98 0 0 1-.774-.397v-1.189a.98.98 0 0 1 .774-.403m3.372 0c.558 0 .861.465.861.991 0 .533-.303.998-.86.998-.552 0-.862-.465-.862-.997 0-.527.31-.992.861-.992m-6.66 1.041c.279 0 .557.105.712.31v.458c-.155.204-.433.31-.712.31-.366 0-.644-.21-.644-.539 0-.322.278-.539.644-.539m14.269.65a.44.44 0 0 0-.434.428c0 .235.198.44.434.44a.445.445 0 0 0 .434-.44.44.44 0 0 0-.434-.428"/></svg>
-					</a>
-					<a href="https://linktr.ee/geniux" target="_blank" class="p-2.5 border border-muted/50 rounded-xl hover:border-brand hover:text-brand transition-all hover:scale-110 active:scale-95 bg-white/50 dark:bg-white/5 shadow-sm" aria-label="Linktree">
-						<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="m13.73635 5.85251 4.00467-4.11665 2.3248 2.3808-4.20064 4.00466h5.9085v3.30473h-5.9365l4.22865 4.10766-2.3248 2.3338L12.0005 12.099l-5.74052 5.76852-2.3248-2.3248 4.22864-4.10766h-5.9375V8.12132h5.9085L3.93417 4.11666l2.3248-2.3808 4.00468 4.11665V0h3.4727zm-3.4727 10.30614h3.4727V24h-3.4727z"/></svg>
-					</a>
-					<a href="https://geniux.wordpress.com" target="_blank" class="p-2.5 border border-muted/50 rounded-xl hover:border-brand hover:text-brand transition-all hover:scale-110 active:scale-95 bg-white/50 dark:bg-white/5 shadow-sm" aria-label="WordPress">
-						<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M21.469 6.825c.84 1.537 1.318 3.3 1.318 5.175 0 3.979-2.156 7.456-5.363 9.325l3.295-9.527c.615-1.54.82-2.771.82-3.864 0-.405-.026-.78-.07-1.11m-7.981.105c.647-.03 1.232-.105 1.232-.105.582-.075.514-.93-.067-.899 0 0-1.755.135-2.88.135-1.064 0-2.85-.15-2.85-.15-.585-.03-.661.855-.075.885 0 0 .54.061 1.125.09l1.68 4.605-2.37 7.08L5.354 6.9c.649-.03 1.234-.1 1.234-.1.585-.075.516-.93-.065-.896 0 0-1.746.138-2.874.138-.2 0-.438-.008-.69-.015C4.911 3.15 8.235 1.215 12 1.215c2.809 0 5.365 1.072 7.286 2.833-.046-.003-.091-.009-.141-.009-1.06 0-1.812.923-1.812 1.914 0 .89.513 1.643 1.06 2.531.411.72.89 1.643.89 2.977 0 .915-.354 1.994-.821 3.479l-1.075 3.585-3.9-11.61.001.014zM12 22.784c-1.059 0-2.081-.153-3.048-.437l3.237-9.406 3.315 9.087c.024.053.05.101.078.149-1.12.393-2.325.609-3.582.609M1.211 12c0-1.564.336-3.05.935-4.39L7.29 21.709C3.694 19.96 1.212 16.271 1.211 12M12 0C5.385 0 0 5.385 0 12s5.385 12 12 12 12-5.385 12-12S18.615 0 12 0"/></svg>
-					</a>
-					<a href="https://blogger.geniux.net" target="_blank" class="p-2.5 border border-muted/50 rounded-xl hover:border-brand hover:text-brand transition-all hover:scale-110 active:scale-95 bg-white/50 dark:bg-white/5 shadow-sm" aria-label="Blogger">
-						<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M21.976 24H2.026C.9 24 0 23.1 0 21.976V2.026C0 .9.9 0 2.025 0H22.05C23.1 0 24 .9 24 2.025v19.95C24 23.1 23.1 24 21.976 24zM12 3.975H9c-2.775 0-5.025 2.25-5.025 5.025v6c0 2.774 2.25 5.024 5.025 5.024h6c2.774 0 5.024-2.25 5.024-5.024v-3.975c0-.6-.45-1.05-1.05-1.05H18c-.524 0-.976-.45-.976-.976 0-2.776-2.25-5.026-5.024-5.026zm3.074 12H9c-.525 0-.975-.45-.975-.975s.45-.976.975-.976h6.074c.526 0 .977.45.977.976s-.45.976-.975.976zm-2.55-7.95c.527 0 .976.45.976.975s-.45.975-.975.975h-3.6c-.525 0-.976-.45-.976-.975s.45-.975.975-.975h3.6z"/></svg>
-					</a>
-					<a href="mailto:geniux+glog@gmail.com" class="p-2.5 border border-muted/50 rounded-xl hover:border-brand hover:text-brand transition-all hover:scale-110 active:scale-95 bg-white/50 dark:bg-white/5 shadow-sm" aria-label="Email">
-						<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
-					</a>
+				<!-- 5. Intro Text -->
+				<div class="max-w-2xl">
+					<p class="text-lg leading-relaxed text-muted-foreground font-medium text-balance italic">
+						I am <span class="text-foreground border-b border-brand/20 font-bold not-italic">S'ALL Running Man</span>, seeking the granules of logic across ten thousand years of evolution. My exploratory boundaries span from the underlying protocols of ancient history to the strategic M&A of modern tech giants, and from multi-agent R&D paradigms to the structural evolution of industrial energy systems. In this endless marathon, I deconstruct historical archives, business maneuvers, and engineering limits to capture the invariant echoes hidden in chaos, searching for the absolute architecture of future order.
+					</p>
 				</div>
 
-				<!-- Action Buttons -->
-				<div class="w-full flex flex-row items-center justify-center gap-4 pt-4 pb-12">
-					<a href="https://glog.geniux.net" class="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-brand text-white !text-white rounded-xl font-bold hover:bg-brand-dark transition-all hover:shadow-[0_15px_30px_-10px_rgba(59,130,246,0.4)] hover:-translate-y-1 active:translate-y-0 group whitespace-nowrap text-sm sm:text-base shadow-sm sm:min-w-[140px]">
-						Visit Glog
-						<span class="group-hover:translate-x-1 transition-transform">→</span>
-					</a>
-					<a href="/projects" class="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-white dark:bg-white/5 border border-muted rounded-xl font-bold hover:border-brand hover:text-brand transition-all hover:-translate-y-1 active:translate-y-0 group whitespace-nowrap text-sm sm:text-base shadow-sm sm:min-w-[140px]">
-						<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="group-hover:rotate-12 transition-transform shadow-sm"><path d="m16 18 2 2 4-4"/><path d="M12 18H3"/><path d="M16 12H3"/><path d="M16 6H3"/></svg>
-						Projects
-					</a>
+				<!-- 6. Icon Links -->
+				<div class="flex flex-col items-center gap-8 w-full pt-4">
+					<div class="flex flex-wrap justify-center gap-4">
+						{[
+							{ href: "https://x.com/geniux", icon: "M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z" },
+							{ href: "https://about.me/geniux", icon: "M3.158 9.897v4.131h.65v-.408c.23.297.577.483.961.483.768 0 1.332-.582 1.332-1.573 0-.967-.558-1.568-1.332-1.568-.372 0-.719.168-.96.49V9.897Zm10.285.322v.818h-.495v.563h.495v1.729c0 .501.26.774.769.774.297 0 .49-.087.607-.192l-.155-.496a.4.4 0 0 1-.285.112c-.186 0-.285-.155-.285-.36V11.6h.607v-.563h-.607v-.818zm-5.488.743c-.954 0-1.536.706-1.536 1.567 0 .855.582 1.574 1.536 1.574s1.537-.719 1.537-1.574c0-.86-.583-1.567-1.537-1.567m14.577 0c-.886 0-1.518.7-1.518 1.567 0 .948.663 1.574 1.567 1.574.47 0 .91-.155 1.214-.44l-.297-.427c-.217.216-.557.334-.855.334-.564 0-.898-.378-.948-.824H24v-.16c0-.942-.57-1.624-1.468-1.624m-4.576 0c-.459 0-.849.298-.979.477v-.402h-.65v2.991h.65v-2.093c.137-.192.403-.397.694-.397.354 0 .49.217.49.54v1.95h.65v-2.093c.13-.199.403-.397.694-.397.353 0 .495.217.495.54v1.95h.65v-2.161c0-.607-.315-.905-.86-.905-.453 0-.85.28-1.016.545-.1-.322-.372-.545-.818-.545m-16.55 0c-.477 0-.91.15-1.257.484l.272.452a1.2 1.2 0 0 1 .886-.384c.41 0 .7.21.7.557v.446c-.223-.254-.563-.384-.972-.384-.49 0-1.035.285-1.035.979 0 .656.551.99 1.035.99.396 0 .75-.142.972-.402v.328h.65V12.04c0-.799-.582-1.078-1.25-1.078m8.449.075v2.118c0 .607.322.948.966.948.47 0 .842-.235 1.053-.471v.396h.65v-2.991h-.65v2.1a.99.99 0 0 1-.762.39c-.372 0-.607-.149-.607-.613v-1.877zm12.67.458c.589 0 .83.434.85.787H21.69c.025-.36.285-.787.837-.787m-17.942.043c.514 0 .843.415.843.992 0 .582-.329.997-.843.997a.98.98 0 0 1-.774-.397v-1.189a.98.98 0 0 1 .774-.403m3.372 0c.558 0 .861.465.861.991 0 .533-.303.998-.86.998-.552 0-.862-.465-.862-.997 0-.527.31-.992.861-.992m-6.66 1.041c.279 0 .557.105.712.31v.458c-.155.204-.433.31-.712.31-.366 0-.644-.21-.644-.539 0-.322.278-.539.644-.539m14.269.65a.44.44 0 0 0-.434.428c0 .235.198.44.434.44a.445.445 0 0 0 .434-.44.44.44 0 0 0-.434-.428" },
+							{ href: "https://linktr.ee/geniux", icon: "m13.73635 5.85251 4.00467-4.11665 2.3248 2.3808-4.20064 4.00466h5.9085v3.30473h-5.9365l4.22865 4.10766-2.3248 2.3338L12.0005 12.099l-5.74052 5.76852-2.3248-2.3248 4.22864-4.10766h-5.9375V8.12132h5.9085L3.93417 4.11666l2.3248-2.3808 4.00468 4.11665V0h3.4727zm-3.4727 10.30614h3.4727V24h-3.4727z" },
+							{ href: "https://geniux.wordpress.com", icon: "M21.469 6.825c.84 1.537 1.318 3.3 1.318 5.175 0 3.979-2.156 7.456-5.363 9.325l3.295-9.527c.615-1.54.82-2.771.82-3.864 0-.405-.026-.78-.07-1.11m-7.981.105c.647-.03 1.232-.105 1.232-.105.582-.075.514-.93-.067-.899 0 0-1.755.135-2.88.135-1.064 0-2.85-.15-2.85-.15-.585-.03-.661.855-.075.885 0 0 .54.061 1.125.09l1.68 4.605-2.37 7.08L5.354 6.9c.649-.03 1.234-.104 1.234-.104.585-.075.516-.93-.065-.896 0 0-1.746.138-2.874.138-.2 0-.438-.008-.69-.015C4.911 3.15 8.235 1.215 12 1.215c2.809 0 5.365 1.072 7.286 2.833-.046-.003-.091-.009-.141-.009-1.06 0-1.812.923-1.812 1.914 0 .89.513 1.643 1.06 2.531.411.72.89 1.643.89 2.977 0 .915-.354 1.994-.821 3.479l-1.075 3.585-3.9-11.61.001.014zM12 22.784c-1.059 0-2.081-.153-3.048-.437l3.237-9.406 3.315 9.087c.024.053.05.101.078.149-1.12.393-2.325.609-3.582.609M1.211 12c0-1.564.336-3.05.935-4.39L7.29 21.709C3.694 19.96 1.212 16.271 1.211 12M12 0C5.385 0 0 5.385 0 12s5.385 12 12 12 12-5.385 12-12S18.615 0 12 0" },
+							{ href: "https://blogger.geniux.net", icon: "M21.976 24H2.026C.9 24 0 23.1 0 21.976V2.026C0 .9.9 0 2.025 0H22.05C23.1 0 24 .9 24 2.025v19.95C24 23.1 23.1 24 21.976 24zM12 3.975H9c-2.775 0-5.025 2.25-5.025 5.025v6c0 2.774 2.25 5.024 5.025 5.024h6c2.774 0 5.024-2.25 5.024-5.024v-3.975c0-.6-.45-1.05-1.05-1.05H18c-.524 0-.976-.45-.976-.976 0-2.776-2.25-5.026-5.024-5.026zm3.074 12H9c-.525 0-.975-.45-.975-.975s.45-.976.975-.976h6.074c.526 0 .977.45.977.976s-.45.976-.975.976zm-2.55-7.95c.527 0 .976.45.976.975s-.45.975-.975.975h-3.6c-.525 0-.976-.45-.976-.975s.45-.975.975-.975h3.6z" },
+							{ href: "mailto:geniux+glog@gmail.com", icon: "m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7M2 4h20a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2" }
+						].map(social => (
+							<a href={social.href} target="_blank" class="p-2.5 border border-muted/20 rounded-lg hover:border-brand hover:text-brand transition-all hover:scale-105 active:scale-95 bg-white/50 dark:bg-white/5 shadow-sm">
+								<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" class={social.href.includes('mailto') ? 'fill-none stroke-current' : ''}>
+									<path d={social.icon} stroke-width={social.href.includes('mailto') ? '2' : '0'}/>
+								</svg>
+							</a>
+						))}
+					</div>
+
+					<!-- 7. Logo Wall (Moved here below Icon Links) -->
+					<div class="w-full space-y-6">
+						<div class="flex flex-col items-center gap-2">
+							<h2 class="text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground/40">Project & Case</h2>
+							<div class="h-px w-8 bg-brand/30"></div>
+						</div>
+						<div class="flex flex-wrap justify-center items-center gap-x-10 gap-y-6 opacity-40 grayscale hover:grayscale-0 transition-all duration-700">
+							{logos.map(logo => (
+								<div class={`text-base font-bold tracking-tight ${logo.color} hover:opacity-100 transition-opacity cursor-default`}>
+									{logo.name}
+								</div>
+							))}
+						</div>
+					</div>
 				</div>
+
 			</div>
 
-			<!-- Footer Action (Bottom Right) -->
-			<div class="fixed bottom-8 right-8 animate-in slide-in-from-right-8 fade-in duration-1000 delay-500">
-				<button id="copy-link" class="p-4 bg-white dark:bg-black border border-muted rounded-full shadow-lg hover:shadow-brand/20 hover:border-brand transition-all active:scale-90 group" title="Copy Page Link">
-					<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="group-hover:rotate-12 transition-transform"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
-				</button>
-			</div>
+			<!-- Copy Link Tool -->
+			<button id="copy-link" class="fixed bottom-6 right-6 p-3.5 bg-white/80 dark:bg-black/80 backdrop-blur border border-muted/20 rounded-full shadow-lg hover:border-brand/40 transition-all active:scale-90" title="Copy Link">
+				<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+			</button>
 		</main>
 
 		<script>
 			document.getElementById('copy-link')?.addEventListener('click', () => {
 				navigator.clipboard.writeText(window.location.href);
-				alert('Link copied to clipboard!');
+				alert('Link copied!');
 			});
 		</script>
 	</body>
