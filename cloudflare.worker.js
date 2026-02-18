@@ -1,8 +1,6 @@
 /**
  * Cloudflare Workers for geniux.net & glog.geniux.net
- * Includes: 
- * 1. Intro Page Proxy (geniux.net)
- * 2. Multi-platform Load Balancer with Geo-Routing & Cache (glog.geniux.net)
+ * Optimized for Stability, Geo-Routing, and Fallback.
  */
 
 // === 配置区 ===
@@ -10,236 +8,236 @@ const BACKENDS = [
     {
         name: "vercel",
         url: "https://glog.vercel.geniux.net",
-        weight: 5,
-        region: "CN"
+        hostname: "glog.vercel.geniux.net",
+        weight: 10, // 增加 Vercel 权重
+        region: "Global"
     },
     {
         name: "netlify",
         url: "https://glog.netlify.geniux.net",
-        weight: 2,
-        region: "Global/Fallback"
+        hostname: "glog.netlify.geniux.net",
+        weight: 3,
+        region: "Europe & Africa & Oceania & Latin America"
     },
     {
         name: "qcloud",
         url: "https://glog.qcloud.geniux.net",
-        weight: 3,
+        hostname: "glog.qcloud.geniux.net",
+        weight: 5,
         region: "APAC"
     }
 ];
 
-const TIMEOUT_MS = 3000;
-const USE_GEO_ROUTING = true;
+const TIMEOUT_MS_PRIMARY = 4000; // 首选后端超时稍长
+const TIMEOUT_MS_BACKUP = 2000;  // 备份后端快速切换
 const CACHE_HTML = true;
-const HTML_CACHE_TTL = 600;
+const HTML_CACHE_TTL = 300; // 5分钟 HTML 缓存，平衡实时性与稳定性
 
 // 地理位置路由映射
 const GEO_ROUTING = {
     'CN': 'vercel',
     'JP': 'qcloud',
-    'KR': 'qcloud',
     'SG': 'qcloud',
     'HK': 'qcloud',
-    'TW': 'qcloud',
-    'US': 'vercel',
-    'CA': 'vercel',
-    'GB': 'vercel',
+    // 亚洲 (其他) - Netlify
+    'IN': 'netlify',     // 印度
+    'ID': 'netlify',     // 印尼
+    'PH': 'netlify',     // 菲律宾
+    'TH': 'netlify',     // 泰国
+    'VN': 'netlify',     // 越南
+    'MY': 'netlify',     // 马来西亚
+    'TW': 'netlify',
+    'KR': 'netlify',
+    // 非洲 - Netlify
+    'ZA': 'netlify',     // 南非
+    'EG': 'netlify',     // 埃及
+    'NG': 'netlify',     // 尼日利亚
+    // 拉丁美洲 - Netlify
+    'BR': 'netlify',     // 巴西
+    'MX': 'netlify',     // 墨西哥
+    'AR': 'netlify',     // 阿根廷
+    'CL': 'netlify',     // 智利
+    'CO': 'netlify',     // 哥伦比亚
+    'PE': 'netlify',     // 秘鲁
     'default': 'vercel'
 };
 
 // === 工具函数 ===
 
-function removeConditionalHeaders(headers) {
-    const newHeaders = new Headers(headers);
-    newHeaders.delete('if-modified-since');
-    newHeaders.delete('if-none-match');
-    newHeaders.delete('if-unmodified-since');
-    newHeaders.delete('if-match');
-    return newHeaders;
-}
-
 function cleanHeaders(headers) {
     const newHeaders = new Headers(headers);
-    newHeaders.delete('content-encoding');
-    newHeaders.delete('content-length');
-    newHeaders.delete('transfer-encoding');
-    newHeaders.delete('connection');
-    newHeaders.delete('keep-alive');
+    const removeHeaders = [
+        'content-encoding', 'content-length', 'transfer-encoding',
+        'connection', 'keep-alive', 'x-powered-by', 'server'
+    ];
+    removeHeaders.forEach(h => newHeaders.delete(h));
     return newHeaders;
 }
 
-async function fetchWithTimeout(url, options = {}) {
+/**
+ * 带有超时的请求包装
+ */
+async function fetchWithTimeout(url, options, timeoutMs) {
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), TIMEOUT_MS);
-    const startTime = Date.now();
+    const timeout = setTimeout(() => controller.abort(), timeoutMs);
 
     try {
-        const res = await fetch(url, { ...options, signal: controller.signal });
+        const response = await fetch(url, { ...options, signal: controller.signal });
         clearTimeout(timeout);
-        const latency = Date.now() - startTime;
-        return { res, latency };
+        return response;
     } catch (e) {
         clearTimeout(timeout);
-        return { res: null, latency: Date.now() - startTime, error: e.message };
+        throw e;
     }
 }
 
-function getPreferredBackend(request) {
-    if (!USE_GEO_ROUTING) return null;
+/**
+ * 统一代理入口
+ * @param {Request} request 原始请求
+ * @param {string} overrideHost 可选的 Host 覆盖（用于 geniux.net 代理到 glog）
+ * @param {boolean} useFallbacks 是否启用多后端重试
+ */
+async function unifiedProxy(request, overrideHost = null, useFallbacks = true) {
+    const url = new URL(request.url);
     const country = request.cf?.country || 'default';
-    const preferred = GEO_ROUTING[country] || GEO_ROUTING.default;
-    return BACKENDS.find(b => b.name === preferred);
-}
+    const preferredName = GEO_ROUTING[country] || GEO_ROUTING.default;
 
-async function sequentialFallback(request, preferredBackend = null) {
-    const orderedBackends = preferredBackend
-        ? [preferredBackend, ...BACKENDS.filter(b => b !== preferredBackend).sort((a, b) => b.weight - a.weight)]
-        : BACKENDS.sort((a, b) => b.weight - a.weight);
+    // 根据权重和地理位置排序后端
+    const sortedBackends = [...BACKENDS].sort((a, b) => {
+        if (a.name === preferredName) return -1;
+        if (b.name === preferredName) return 1;
+        return b.weight - a.weight;
+    });
 
-    const reqHeaders = removeConditionalHeaders(request.headers);
+    const path = url.pathname + url.search;
+    const reqHeaders = new Headers(request.headers);
+    reqHeaders.delete('if-modified-since');
+    reqHeaders.delete('if-none-match');
 
-    for (const backend of orderedBackends) {
-        const target = backend.url + new URL(request.url).pathname + new URL(request.url).search;
+    let lastError = "";
 
-        const { res, latency } = await fetchWithTimeout(target, {
-            method: request.method,
-            headers: reqHeaders,
-            body: request.method === "GET" ? undefined : request.body,
-            redirect: "follow"
-        });
+    for (const [index, backend] of sortedBackends.entries()) {
+        try {
+            const targetUrl = backend.url + path;
+            const currentHeaders = new Headers(reqHeaders);
 
-        if (res && res.ok) {
-            const headers = cleanHeaders(res.headers);
+            // 关键：设置正确的 Host 响应后端校验
+            currentHeaders.set("Host", backend.hostname);
+
+            const timeout = (index === 0) ? TIMEOUT_MS_PRIMARY : TIMEOUT_MS_BACKUP;
+
+            const response = await fetchWithTimeout(targetUrl, {
+                method: request.method,
+                headers: currentHeaders,
+                body: (request.method !== "GET" && request.method !== "HEAD") ? request.body : undefined,
+                redirect: "follow"
+            }, timeout);
+
+            // 如果后端返回 5xx 或 408，或者连接失败，则尝试下一个
+            if (!response.ok && (response.status >= 500 || response.status === 408)) {
+                lastError = `Backend ${backend.name} status ${response.status}`;
+                continue;
+            }
+
+            // 如果是 404，在多后端镜像架构中，可能是同步延迟
+            // 如果还有其他后端，可以尝试一下，但 404 通常由首选后端给出即可信任
+            if (response.status === 404 && index < sortedBackends.length - 1) {
+                lastError = `Backend ${backend.name} returned 404`;
+                // 继续寻找可能已经同步的后端
+                continue;
+            }
+
+            // 返回成功或正常的业务错误（如用户真的访问了不存在的页面）
+            const headers = cleanHeaders(response.headers);
             headers.set('X-Backend-Used', backend.name);
-            headers.set('X-Backend-Latency', latency + 'ms');
-            return new Response(res.body, { status: res.status, statusText: res.statusText, headers: headers });
+            headers.set('X-Proxy-Status', 'Managed');
+
+            return new Response(response.body, {
+                status: response.status,
+                statusText: response.statusText,
+                headers: headers
+            });
+
+        } catch (e) {
+            lastError = `Backend ${backend.name} failed: ${e.message}`;
+            if (!useFallbacks) break;
+            continue;
         }
     }
-    return new Response("All backends failed", { status: 502 });
+
+    // 最终失败
+    return new Response(`Global Load Balancer Error: ${lastError || "All units exhausted"}`, {
+        status: 502,
+        headers: { "Content-Type": "text/plain; charset=utf-8" }
+    });
 }
 
-async function handleWithCache(request) {
+// === Worker 逻辑实现 ===
+
+async function handleRequest(request) {
     const url = new URL(request.url);
-    if (request.method !== 'GET') {
-        return await sequentialFallback(request, getPreferredBackend(request));
+    const hostname = url.hostname;
+
+    // 健康检查
+    if (url.pathname === '/_health') {
+        return new Response("OK", { status: 200 });
     }
 
-    const pathname = url.pathname;
-    const isStatic = /\.(js|css|png|jpg|jpeg|gif|svg|ico|woff|woff2|ttf|eot|webp)$/.test(pathname);
-    const isHTML = CACHE_HTML && (pathname === '/' || pathname.endsWith('.html') || !pathname.includes('.'));
+    // 缓存策略
+    const isStatic = /\.(js|css|png|jpg|jpeg|gif|svg|ico|woff|woff2|ttf|eot|webp)$/.test(url.pathname);
+    const canCache = request.method === 'GET' && (isStatic || CACHE_HTML);
 
-    if (!isStatic && !isHTML) {
-        return await sequentialFallback(request, getPreferredBackend(request));
+    if (canCache) {
+        const cache = caches.default;
+        let response = await cache.match(request);
+        if (response) {
+            const newHeaders = new Headers(response.headers);
+            newHeaders.set('X-Cache-Status', 'HIT');
+            return new Response(response.body, { status: response.status, headers: newHeaders });
+        }
     }
 
-    const cache = caches.default;
-    const cacheKey = new Request(url.toString(), { method: 'GET' });
+    // 执行代理
+    let response = await unifiedProxy(request);
 
-    let response = await cache.match(cacheKey);
-    if (response) {
-        const headers = cleanHeaders(response.headers);
-        headers.set('X-Cache-Status', 'HIT');
-        return new Response(response.body, { status: response.status, headers: headers });
-    }
-
-    response = await sequentialFallback(request, getPreferredBackend(request));
-    if (response.ok) {
-        const headers = new Headers(response.headers);
+    // 写入缓存
+    if (canCache && response.ok) {
+        const clonedResponse = response.clone();
+        const headers = new Headers(clonedResponse.headers);
         if (isStatic) {
             headers.set('Cache-Control', 'public, max-age=31536000, immutable');
-        } else if (isHTML) {
+        } else {
             headers.set('Cache-Control', `public, max-age=${HTML_CACHE_TTL}`);
         }
-        headers.set('X-Cache-Status', 'MISS');
 
-        const clonedResponse = new Response(response.body, { status: response.status, headers: headers });
-        await cache.put(cacheKey, clonedResponse.clone());
-        return clonedResponse;
+        ctx.waitUntil(caches.default.put(request, new Response(clonedResponse.body, {
+            status: clonedResponse.status,
+            headers
+        })));
     }
+
     return response;
 }
 
-// --- Worker 1: geniux-intro (geniux.net/*) ---
-export const introWorker = {
-    async fetch(request) {
+// === 主出口 (ES Module) ===
+export default {
+    async fetch(request, env, ctx) {
+        // 全局上下文变量注入（用于 waitUntil）
+        globalThis.ctx = ctx;
+
         const url = new URL(request.url);
-        // 映射：根路径代理到 /intro/，其余保持不变（资源文件）
-        const path = url.pathname;
-        const search = url.search;
 
-        const backends = [
-            "glog.vercel.geniux.net",
-            "glog.netlify.geniux.net",
-            "glog.qcloud.geniux.net"
-        ];
-
-        let lastError = "No backends configured";
-        for (const domain of backends) {
+        // 分流逻辑
+        // geniux.net 代理到博客首页 (Intro)
+        // glog.geniux.net 正常的博客访问
+        if (url.hostname === "geniux.net" || url.hostname === "glog.geniux.net") {
             try {
-                const targetUrl = `https://${domain}${path}${search}`;
-                const reqHeaders = new Headers(request.headers);
-
-                reqHeaders.set("Host", domain);
-                reqHeaders.delete("Referer");
-
-                const response = await fetch(targetUrl, {
-                    method: request.method,
-                    headers: reqHeaders,
-                    redirect: "follow"
-                });
-
-                if (response.ok) {
-                    const headers = cleanHeaders(response.headers);
-                    headers.delete("Location");
-                    headers.delete("Refresh");
-
-                    return new Response(response.body, {
-                        status: response.status,
-                        statusText: response.statusText,
-                        headers: headers
-                    });
-                } else {
-                    lastError = `Backend ${domain} returned ${response.status} ${response.statusText}`;
-                }
+                return await handleRequest(request);
             } catch (e) {
-                lastError = `Fetch failed for ${domain}: ${e.message}`;
-                console.error(`Intro Sync Failed for ${domain}: ${e.message}`);
-                continue;
+                return new Response(`Critical Proxy Failure: ${e.message}`, { status: 500 });
             }
         }
 
-        return new Response(`Intro Page Proxy Error: ${lastError}`, {
-            status: 502,
-            headers: { "Content-Type": "text/plain; charset=utf-8" }
-        });
-    }
-};
-
-// --- Worker 2: glog-balancer (glog.geniux.net/*) ---
-export const balancerWorker = {
-    async fetch(request) {
-        return await handleWithCache(request);
-    }
-};
-
-// === 主入口 ===
-export default {
-    async fetch(request, env, ctx) {
-        const url = new URL(request.url);
-
-        // 健康检查
-        if (url.pathname === '/_health') {
-            return new Response(JSON.stringify({ status: 'healthy', timestamp: new Date().toISOString() }), {
-                headers: { 'Content-Type': 'application/json' }
-            });
-        }
-
-        if (url.hostname === "geniux.net") {
-            return introWorker.fetch(request);
-        }
-        if (url.hostname === "glog.geniux.net") {
-            return balancerWorker.fetch(request);
-        }
-
-        return new Response("Not Found", { status: 404 });
+        return new Response("Unauthorized Hostname", { status: 403 });
     }
 };
