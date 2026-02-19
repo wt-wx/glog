@@ -23,6 +23,9 @@
 - **Cloud Brain**: 深度集成 Google Calendar/Tasks OAuth 体系，构建基于 Telegram 的自动化简报与交互式意图管理。
 - **Infrastructure**: 基于 Supabase 实现加密 Token 持久化存储，推出全新的预览版 Admin 管理后台。
 
+### v1.9.8 - UX Stability & Navigation Fixes (UX 稳定性与导航修复)
+- **Giscus Loading Fix**: 为 Giscus 脚本引入 `data-astro-rerun` 属性，彻底解决 Astro View Transitions 开启时页面跳转导致评论区失效/加载不出的问题。
+
 ### v1.9.7 - 架构收敛与交互重构 (Architecture Convergence & Interaction Revamp)
 - **Homepage Pivot**: 将 `/intro` 提升为全站根路径 (`/`)，确立 "Intro-First" 的叙事模式。同步更新 `cloudflare.worker.js` 代理逻辑，移除失效的 `/intro` 路径映射，解决首页访问 404 问题。同时重构 Intro 页排版，采用极简主义风格并强化品牌词 "S'ALL Running Man" 视觉交互。
 - **Routing Strategy**: 分离 `Blog` 首页 (`/blog`) 与全量文章 `Archives` (`/archives`)，优化分页导航与面包屑逻辑。
@@ -215,4 +218,4 @@ Glog 采用多云容灾与全球加速架构，确保在任何网络环境下都
 
 ---
 
-沉淀知识，持续成长。 **Glog v1.9.6 Development in Progress.**
+沉淀知识，持续成长。 **Glog v1.9.8 Development in Progress.**
