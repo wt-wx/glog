@@ -23,6 +23,9 @@
 - **Cloud Brain**: 深度集成 Google Calendar/Tasks OAuth 体系，构建基于 Telegram 的自动化简报与交互式意图管理。
 - **Infrastructure**: 基于 Supabase 实现加密 Token 持久化存储，推出全新的预览版 Admin 管理后台。
 
+### v1.9.10 - Stability Fix: TOC & Build (目录构建稳定性修复)
+- **Build Bug Fix**: 修复 `TableOfContents` 组件在非博客页面（如 About 页）因缺失 `headings` 数据导致 `.filter()` 报错的问题。
+
 ### v1.9.9 - UX Refinement: TOC & Navigation (目录交互优化)
 - **TOC Optimization**: 重构文章目录交互，采用 "Inline & Auto-Hide" 策略。目录位于文章开头，阅读时自然划走不遮挡视线，并支持 "On This Page" 标题栏吸顶（Sticky）与成组折叠（Accordion），兼顾沉浸式阅读与快速导航。
 
@@ -221,4 +224,4 @@ Glog 采用多云容灾与全球加速架构，确保在任何网络环境下都
 
 ---
 
-沉淀知识，持续成长。 **Glog v1.9.8 Development in Progress.**
+沉淀知识，持续成长。 **Glog v1.9.10 Development in Progress.**
