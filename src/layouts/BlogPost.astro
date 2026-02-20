@@ -11,6 +11,7 @@ import Giscus from '../components/Giscus.astro';
 import XReplies from '../components/XReplies.astro';
 
 import RelatedPosts from '../components/RelatedPosts.astro';
+import TableOfContents from '../components/TableOfContents.astro';
 
 type Props = { 
 	post: CollectionEntry<'blog'>;
@@ -66,6 +67,8 @@ const id = post ? post.id : 'page';
 							<Image width={1020} height={510} src={heroImage} alt="" class="w-full h-full object-cover" />
 						</div>
 					)}
+
+					<TableOfContents headings={headings} />
 					
 					<div class="prose prose-lg dark:prose-invert prose-indigo max-w-none">
 						<slot />
@@ -104,44 +107,6 @@ const id = post ? post.id : 'page';
 					<Giscus />
 				</article>
 
-				<!-- Floating ToC Menu (Desktop only, closer to content) -->
-				{headings && headings.length > 0 && (
-					<div 
-						class="hidden lg:flex fixed z-40 flex-col items-start top-52" 
-						id="toc-container"
-						style="right: max(1rem, calc(50vw - 420px));"
-					>
-						<!-- Toggle Button -->
-						<button 
-							id="toc-toggle" 
-							class="w-10 h-10 flex items-center justify-center bg-background/80 backdrop-blur-xl border border-muted/50 rounded-full shadow-lg hover:shadow-brand/20 hover:border-brand transition-all active:scale-95 group"
-						>
-							<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-muted-foreground group-hover:text-brand transition-colors"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg>
-						</button>
-
-						<!-- ToC Popover (Expands to the Right) -->
-						<div 
-							id="toc-content" 
-							class="hidden absolute left-0 top-12 w-64 lg:w-72 max-h-[70vh] p-6 bg-background/95 backdrop-blur-2xl border border-muted/50 rounded-3xl shadow-2xl overflow-y-auto animate-in zoom-in-95 slide-in-from-left-4 duration-300 origin-top-left"
-						>
-							<h2 class="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-6 italic">On this page</h2>
-							<nav>
-								<ul class="space-y-4 text-sm">
-									{headings.filter(h => h.depth <= 3).map(h => (
-										<li style={`margin-left: ${(h.depth - 2) * 1}rem`}>
-											<a 
-												href={`#${h.slug}`} 
-												class="toc-link text-muted-foreground/80 hover:text-brand transition-all block py-0.5 border-l-2 border-transparent pl-4 hover:border-brand/30 leading-relaxed"
-											>
-												{h.text}
-											</a>
-										</li>
-									))}
-								</ul>
-							</nav>
-						</div>
-					</div>
-				)}
 			</div>
 		</main>
 		<Footer />
@@ -157,64 +122,9 @@ const id = post ? post.id : 'page';
 				}
 			};
 
-			// ToC Toggle Logic
-			const setupToc = () => {
-				const toggle = document.getElementById('toc-toggle');
-				const content = document.getElementById('toc-content');
-				
-				if (toggle && content) {
-					toggle.addEventListener('click', (e) => {
-						e.stopPropagation();
-						content.classList.toggle('hidden');
-						toggle.classList.toggle('border-brand');
-						toggle.classList.toggle('text-brand');
-					});
-
-					document.addEventListener('click', (e) => {
-						if (!content.contains(e.target as Node) && !toggle.contains(e.target as Node)) {
-							content.classList.add('hidden');
-							toggle.classList.remove('border-brand');
-						}
-					});
-
-					document.addEventListener('keydown', (e) => {
-						if (e.key === 'Escape') {
-							content.classList.add('hidden');
-							toggle.classList.remove('border-brand');
-						}
-					});
-
-					content.querySelectorAll('a').forEach(link => {
-						link.addEventListener('click', () => {
-							content.classList.add('hidden');
-							toggle.classList.remove('border-brand');
-						});
-					});
-				}
-			};
-
-			// Active Heading Observer
-			const setupScrollObserver = () => {
-				const observer = new IntersectionObserver((entries) => {
-					entries.forEach(entry => {
-						const id = entry.target.getAttribute('id');
-						const tocLink = document.querySelector(`.toc-link[href="#${id}"]`);
-						if (entry.isIntersecting && tocLink) {
-							document.querySelectorAll('.toc-link').forEach(a => a.classList.remove('text-brand', 'font-bold', 'border-brand', 'pl-6'));
-							tocLink.classList.add('text-brand', 'font-bold', 'border-brand', 'pl-6');
-						}
-					});
-				}, { rootMargin: '-10% 0% -80% 0%' });
-
-				document.querySelectorAll('h1[id], h2[id], h3[id]').forEach(h => observer.observe(h));
-			};
-
-			// Initialize
 			document.addEventListener('astro:page-load', () => {
 				window.addEventListener('scroll', updateProgressBar);
 				updateProgressBar();
-				setupToc();
-				setupScrollObserver();
 			});
 		</script>
 	</body>

@@ -23,6 +23,9 @@
 - **Cloud Brain**: 深度集成 Google Calendar/Tasks OAuth 体系，构建基于 Telegram 的自动化简报与交互式意图管理。
 - **Infrastructure**: 基于 Supabase 实现加密 Token 持久化存储，推出全新的预览版 Admin 管理后台。
 
+### v1.9.9 - UX Refinement: TOC & Navigation (目录交互优化)
+- **TOC Optimization**: 重构文章目录交互，采用 "Inline & Auto-Hide" 策略。目录位于文章开头，阅读时自然划走不遮挡视线，并支持 "On This Page" 标题栏吸顶（Sticky）与成组折叠（Accordion），兼顾沉浸式阅读与快速导航。
+
 ### v1.9.8 - UX Stability & Navigation Fixes (UX 稳定性与导航修复)
 - **Giscus Loading Fix**: 为 Giscus 脚本引入 `data-astro-rerun` 属性，彻底解决 Astro View Transitions 开启时页面跳转导致评论区失效/加载不出的问题。
 

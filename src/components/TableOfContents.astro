@@ -1,0 +1,143 @@
+---
+import type { MarkdownHeading } from 'astro';
+
+interface Props {
+  headings: MarkdownHeading[];
+}
+
+const { headings } = Astro.props;
+
+const filteredHeadings = headings.filter((heading) => heading.depth <= 3);
+---
+
+{
+  filteredHeadings.length > 0 && (
+    <nav class="toc-wrapper mb-12 relative z-30" aria-label="Table of Contents">
+      <details class="toc-details group bg-muted/30 hover:bg-muted/50 rounded-2xl border border-muted/50 transition-all duration-300 open:pb-4">
+        <summary class="list-none flex items-center justify-between p-4 cursor-pointer select-none text-sm font-bold uppercase tracking-widest text-muted-foreground group-hover:text-foreground transition-colors outline-none focus-visible:ring-2 focus-visible:ring-brand/50 rounded-2xl">
+          <div class="flex items-center gap-3">
+            <div class="p-1.5 rounded-lg bg-background/50 border border-muted/50 group-hover:border-brand/30 transition-colors">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-list-restart text-brand"><line x1="21" x2="3" y1="6" y2="6"/><line x1="21" x2="3" y1="12" y2="12"/><line x1="21" x2="3" y1="18" y2="18"/><path d="M3 6v18"/></svg>
+            </div>
+            <span>On This Page</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="text-xs font-medium text-muted-foreground/60 group-open:hidden transition-all px-2">Click to expand</span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 text-muted-foreground transition-transform duration-300 group-open:rotate-180"><path d="m6 9 6 6 6-6"/></svg>
+          </div>
+        </summary>
+        
+        <div class="px-4 pt-2 animate-in slide-in-from-top-2 fade-in duration-300 max-h-[60vh] overflow-y-auto">
+          <ul class="flex flex-col gap-1 text-sm border-l border-muted/40 ml-2 pl-4">
+            {filteredHeadings.map((heading) => (
+              <li class={`toc-item depth-${heading.depth} relative`} style={`margin-left: ${(heading.depth - 2) * 0.5}rem`}>
+                <a 
+                  href={`#${heading.slug}`} 
+                  class="toc-link text-muted-foreground/80 hover:text-brand transition-all block py-1.5 leading-relaxed relative hover:translate-x-1 duration-200"
+                >
+                  {heading.text}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </details>
+    </nav>
+  )
+}
+
+<script>
+  // Highlighting Logic
+  const observerOptions = {
+    root: null,
+    rootMargin: '-10% 0px -80% 0px', // Trigger when heading is near the top
+    threshold: 1.0
+  };
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      const id = entry.target.getAttribute('id');
+      if (entry.isIntersecting && id) {
+        // Remove active class from all links
+        document.querySelectorAll('.toc-link').forEach((link) => {
+          link.classList.remove('text-brand', 'font-bold', 'opacity-100');
+          link.classList.add('text-muted-foreground/80');
+        });
+
+        // Add active class to current link
+        const activeLink = document.querySelector(`.toc-link[href="#${id}"]`);
+        if (activeLink) {
+          activeLink.classList.remove('text-muted-foreground/80');
+          activeLink.classList.add('text-brand', 'font-bold', 'opacity-100');
+        }
+      }
+    });
+  }, observerOptions);
+
+  // Track all headings on the page
+  document.querySelectorAll('h2[id], h3[id]').forEach((heading) => {
+    observer.observe(heading);
+  });
+  
+  // Smooth scroll behavior for links
+  document.querySelectorAll('.toc-link').forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      const href = link.getAttribute('href');
+      if(href) {
+        const target = document.querySelector(href);
+        if(target) {
+            // Add offset for fixed headers if necessary
+            const headerOffset = 100;
+            const elementPosition = target.getBoundingClientRect().top;
+            const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+      
+            window.scrollTo({
+              top: offsetPosition,
+              behavior: "smooth"
+            });
+            
+            // Update URL hash without jumping
+            history.pushState(null, '', href);
+        }
+      }
+    });
+  });
+
+  // Sticky Header Logic
+  // We use JavaScript to add a 'stuck' class when the TOC hits the top
+  const tocWrapper = document.querySelector('.toc-wrapper');
+  if (tocWrapper) {
+    const observerSticky = new IntersectionObserver(
+      ([e]) => e.target.classList.toggle('is-pinned', e.intersectionRatio < 1),
+      { threshold: [1] }
+    );
+    // This logic might be complex with details element, simplified approach below
+    // Actually, CSS `sticky` on summary is tricky inside details. 
+    // Let's rely on CSS `sticky` on the wrapper or summary for now.
+  }
+
+</script>
+
+<style>
+  /* Custom marker for details */
+  summary::-webkit-details-marker {
+    display: none;
+  }
+  
+  /* Active Link Indicator */
+  .toc-link.text-brand::before {
+    content: '';
+    position: absolute;
+    left: -17px; /* Align with border-l */
+    top: 50%;
+    transform: translateY(-50%);
+    width: 3px;
+    height: 16px;
+    background-color: var(--color-brand, #3b82f6);
+    border-radius: 0 4px 4px 0;
+  }
+
+  /* Make the summary sticky within the container when expanded */
+  /* Sticky behavior moved to wrapper */
+</style>
