@@ -48,16 +48,24 @@ async function runAll() {
     const projects = [];
 
     // 1. Try to load from JSON environment variable (Most scalable for many projects)
-    if (process.env.SUPABASE_PROJECTS_JSON) {
+    const rawJson = process.env.SUPABASE_PROJECTS_JSON?.trim();
+    if (rawJson && rawJson !== '' && rawJson !== 'undefined' && rawJson !== 'null') {
         try {
-            const jsonProjects = JSON.parse(process.env.SUPABASE_PROJECTS_JSON);
+            let jsonProjects = JSON.parse(rawJson);
+            // Allow both single object and array
+            if (!Array.isArray(jsonProjects)) {
+                jsonProjects = [jsonProjects];
+            }
+
             projects.push(...jsonProjects.map((p, i) => ({
                 url: p.url,
                 key: p.key,
                 name: p.name || `Project (JSON #${i + 1})`
             })));
         } catch (e) {
-            console.error('❌ Failed to parse SUPABASE_PROJECTS_JSON:', e.message);
+            console.error(`❌ Failed to parse SUPABASE_PROJECTS_JSON: ${e.message}`);
+            console.error(`   Value starts with: ${rawJson.substring(0, 10)}... (Length: ${rawJson.length})`);
+            console.error('   Hint: Ensure the JSON is a valid array like [{"url": "...", "key": "..."}]');
         }
     }
 
