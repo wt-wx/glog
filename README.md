@@ -2,6 +2,8 @@
 
 基于 Astro 5.0 + Tailwind CSS v4 + Bun 构建的极致性能个人博客。
 
+https://github.com/Terry-/glog.git
+
 ## 🚀 快速开始
 
 所有的命令都在项目根目录下执行：
